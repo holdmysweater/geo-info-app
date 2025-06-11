@@ -5,3 +5,10 @@
   justify-content: center;
   background: #f3f3f3;
 }
+
+.main-container__card[tuiCardLarge] {
+  background: #fdfdfd;
+  padding: 32px;
+  width: 980px;
+  height: 556px;
+}
