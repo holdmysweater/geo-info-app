@@ -1,8 +1,11 @@
 import { Component } from '@angular/core';
+import { TuiTitle } from '@taiga-ui/core';
 
 @Component({
   selector: 'app-header',
-  imports: [],
+  imports: [
+    TuiTitle
+  ],
   templateUrl: './header.html',
   styleUrl: './header.css'
 })
