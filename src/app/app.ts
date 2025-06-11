@@ -10,5 +10,5 @@ import { TuiCardLarge } from '@taiga-ui/layout';
   styleUrl: './app.css'
 })
 export class App {
-  protected title = 'geo-info-app';
+
 }
