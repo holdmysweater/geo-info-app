@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { TuiRadioList } from '@taiga-ui/kit';
 
 @Component({
   selector: 'app-language-settings',
   imports: [
-    FormsModule
+    FormsModule,
+    TuiRadioList
   ],
   templateUrl: './language-settings.html',
   styleUrl: './language-settings.css'
