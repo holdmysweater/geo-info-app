@@ -11,8 +11,7 @@ import { TuiTab, TuiTabsHorizontal } from '@taiga-ui/kit';
   styleUrl: './nav-tabs.css'
 })
 export class NavTabs {
-  protected readonly options: string[] = ['countries', 'cities'];
-
+  protected readonly options: string[] = ['/countries', '/cities'];
   protected activeItemIndex: number = 0;
 
   protected onClick(item: string): void {
