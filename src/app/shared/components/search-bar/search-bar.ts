@@ -16,4 +16,5 @@ import { FormsModule } from '@angular/forms';
 export class SearchBar {
   public change = output<string>();
 
+  protected value: string | undefined;
 }
