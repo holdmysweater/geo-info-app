@@ -1,14 +1,12 @@
-<search class="search-bar">
-  <tui-textfield
-    #s
-    iconStart="@tui.search"
-    tuiTextfieldSize="s"
-  >
-    <input
-      tuiTextfield
-      [placeholder]="s.focused() ? '' : 'Поиск'"
-      [(ngModel)]="value"
-      (change)="onValueChanged()"
-    />
-  </tui-textfield>
-</search>
+<tui-textfield
+  #s
+  iconStart="@tui.search"
+  tuiTextfieldSize="s"
+>
+  <input
+    tuiTextfield
+    [placeholder]="s.focused() ? '' : 'Поиск'"
+    [(ngModel)]="value"
+    (change)="onValueChanged()"
+  />
+</tui-textfield>
