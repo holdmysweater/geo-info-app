@@ -1,11 +1,13 @@
 import { Component } from '@angular/core';
 import { TuiTab, TuiTabsHorizontal } from '@taiga-ui/kit';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-nav-tabs',
   imports: [
     TuiTabsHorizontal,
-    TuiTab
+    TuiTab,
+    RouterLink
   ],
   templateUrl: './nav-tabs.html',
   styleUrl: './nav-tabs.css'
