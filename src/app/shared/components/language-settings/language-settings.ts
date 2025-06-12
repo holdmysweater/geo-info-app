@@ -12,4 +12,8 @@ import { FormsModule } from '@angular/forms';
 export class LanguageSettings {
   protected language: string = "ru";
 
+  protected onLanguageChange(): void {
+    // TODO localization logic
+    console.log('language-settings.ts: changed value to \"' + this.language + '\"');
+  }
 }
