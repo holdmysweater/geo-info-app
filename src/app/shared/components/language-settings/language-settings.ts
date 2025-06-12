@@ -10,5 +10,6 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './language-settings.css'
 })
 export class LanguageSettings {
+  protected language: string = "ru";
 
 }
