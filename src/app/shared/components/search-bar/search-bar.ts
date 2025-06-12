@@ -17,4 +17,9 @@ export class SearchBar {
   public change = output<string>();
 
   protected value: string | undefined;
+
+  protected onValueChanged(): void {
+    console.log('search-bar.ts: new value is \"' + this.value + '\"');
+    this.change.emit(this.value!);
+  }
 }
