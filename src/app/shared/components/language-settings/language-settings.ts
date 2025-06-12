@@ -1,8 +1,11 @@
 import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-language-settings',
-  imports: [],
+  imports: [
+    FormsModule
+  ],
   templateUrl: './language-settings.html',
   styleUrl: './language-settings.css'
 })
