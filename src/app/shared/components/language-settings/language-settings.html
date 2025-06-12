@@ -1,22 +1,8 @@
-<div>
-  <label>
-    <input
-      type="radio"
-      name="lang"
-      value="ru"
-      [(ngModel)]="language"
-      (change)="onLanguageChange()"
-    />
-    RU
-  </label>
-  <label>
-    <input
-      type="radio"
-      name="lang"
-      value="en"
-      [(ngModel)]="language"
-      (change)="onLanguageChange()"
-    />
-    EN
-  </label>
-</div>
+<tui-radio-list
+  size="s"
+  [items]="options"
+  [style.flex-direction]="'row'"
+  [style.width]="'max-content'"
+  [(ngModel)]="language"
+  (change)="onLanguageChange()"
+/>
