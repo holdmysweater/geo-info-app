@@ -12,7 +12,8 @@ import { TuiRadioList } from '@taiga-ui/kit';
   styleUrl: './language-settings.css'
 })
 export class LanguageSettings {
-  protected language: string = "ru";
+  protected readonly options: string[] = ['RU', 'EN'];
+  protected language: string = this.options[0]!;
 
   protected onLanguageChange(): void {
     // TODO localization logic
