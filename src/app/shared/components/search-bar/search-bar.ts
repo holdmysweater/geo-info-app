@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, output } from '@angular/core';
 import { TuiTextfieldComponent, TuiTextfieldDirective, TuiTextfieldOptionsDirective } from '@taiga-ui/core';
 import { FormsModule } from '@angular/forms';
 
@@ -14,5 +14,6 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './search-bar.css'
 })
 export class SearchBar {
+  public change = output<string>();
 
 }
