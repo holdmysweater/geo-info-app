@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class CountriesApi {
+  private readonly baseUrl = 'http://geodb-free-service.wirefreethought.com/v1/geo/countries';
 
   constructor(private readonly http: HttpClient) {
   }
