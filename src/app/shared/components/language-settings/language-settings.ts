@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TuiRadioList } from '@taiga-ui/kit';
 
@@ -12,6 +12,8 @@ import { TuiRadioList } from '@taiga-ui/kit';
   styleUrl: './language-settings.css'
 })
 export class LanguageSettings {
+  public change = output<string>();
+
   protected readonly options: string[] = ['RU', 'EN'];
   protected language: string = this.options[0]!;
 
