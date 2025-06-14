@@ -17,8 +17,8 @@ export class LanguageSettings {
   protected readonly options: string[] = ['RU', 'EN'];
   protected language: string = this.options[0]!;
 
-  protected onLanguageChange(): void {
-    // TODO localization logic
+  protected onValueChanged(): void {
     console.log('language-settings.ts: changed value to \"' + this.language + '\"');
+    this.change.emit(this.language);
   }
 }
