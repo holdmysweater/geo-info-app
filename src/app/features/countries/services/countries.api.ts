@@ -35,4 +35,8 @@ export class CountriesApi {
 
     return this.http.get<CountryDetailResponse>(this.baseUrl + '/v1/geo/countries/' + code, { params });
   }
+
+  public getByLink(link: string): Observable<CountryListResponse> {
+    return this.http.get<CountryListResponse>(this.baseUrl + link);
+  }
 }
