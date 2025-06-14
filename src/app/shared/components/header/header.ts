@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
 import { TuiTitle } from '@taiga-ui/core';
+import { LanguageSettings } from '../language-settings/language-settings';
 
 @Component({
   selector: 'app-header',
   imports: [
-    TuiTitle
+    TuiTitle,
+    LanguageSettings
   ],
   templateUrl: './header.html',
   styleUrl: './header.css'
