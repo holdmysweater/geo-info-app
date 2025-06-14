@@ -7,7 +7,7 @@ import { CountryDetailResponse, CountryListResponse } from "../models/country.mo
   providedIn: 'root'
 })
 export class CountriesApi {
-  private readonly baseUrl = 'http://geodb-free-service.wirefreethought.com/v1/geo/countries';
+  private readonly baseUrl = 'http://geodb-free-service.wirefreethought.com';
 
   constructor(private readonly http: HttpClient) {
   }
@@ -26,13 +26,13 @@ export class CountriesApi {
       .set('languageCode', languageCode)
       .set('sort', sort);
 
-    return this.http.get<CountryListResponse>(this.baseUrl, { params });
+    return this.http.get<CountryListResponse>(this.baseUrl + '/v1/geo/countries', { params });
   }
 
   public getCountry(code: string, languageCode: string): Observable<CountryDetailResponse> {
     const params = new HttpParams()
       .set('languageCode', languageCode)
 
-    return this.http.get<CountryDetailResponse>(this.baseUrl + '/' + code, { params });
+    return this.http.get<CountryDetailResponse>(this.baseUrl + '/v1/geo/countries/' + code, { params });
   }
 }
