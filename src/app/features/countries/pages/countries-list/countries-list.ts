@@ -20,6 +20,7 @@ import { CountrySummary } from '../../models/country.model';
 export class CountriesList {
   protected countries: CountrySummary[] = [];
   protected pageCount: number = 1;
+  protected searchBarInput: string = '';
 
   constructor(private service: Countries) {
   }
@@ -36,11 +37,17 @@ export class CountriesList {
       this.pageCount = pageCount;
     });
 
-    this.service.fetchCountries().subscribe();
+    this.service.fetchCountries(this.searchBarInput).subscribe();
   }
 
   protected onPageClick(pageIndex: number): void {
     console.log('countries-list.ts: clicked on page index = ' + pageIndex);
-    this.service.fetchPage(pageIndex).subscribe();
+    this.service.fetchPage(pageIndex, this.searchBarInput).subscribe();
+  }
+
+  protected onSearchBarInputChange(searchString: string) {
+    console.log('countries-list.ts: new search bar input = \"' + searchString + '\"');
+    this.searchBarInput = searchString;
+    this.service.fetchCountries(this.searchBarInput).subscribe();
   }
 }
