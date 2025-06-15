@@ -4,13 +4,15 @@ import { NavTabs } from '../../../../shared/components/nav-tabs/nav-tabs';
 import { Pagination } from '../../../../shared/components/pagination/pagination';
 import { Countries } from '../../services/countries';
 import { CountrySummary } from '../../models/country.model';
+import { CountriesTable } from '../../components/countries-table/countries-table';
 
 @Component({
   selector: 'app-countries-list',
   imports: [
     SearchBar,
     NavTabs,
-    Pagination
+    Pagination,
+    CountriesTable
   ],
   templateUrl: './countries-list.html',
   styleUrl: './countries-list.css'
