@@ -68,7 +68,7 @@ export class Countries {
 
   // region FETCH
 
-  public fetchCountryDetail(code: string, languageCode: string = 'ru'): Observable<CountryDetail> {
+  public fetchCountryDetail(code: string, languageCode: string = 'en'): Observable<CountryDetail> {
     return this.api.getCountry(code, languageCode).pipe(
       map(response => response.data),
       tap(detail => {
@@ -80,7 +80,7 @@ export class Countries {
 
   public fetchCountries(
     namePrefix: string = '',
-    languageCode: string = 'ru',
+    languageCode: string = 'en',
     sort: string = 'name',
     pageItemsLimit?: number,
     offset: number = 0
@@ -99,7 +99,7 @@ export class Countries {
   public fetchPage(
     pageIndex: number,
     namePrefix: string = '',
-    languageCode: string = 'ru',
+    languageCode: string = 'en',
     sort: string = 'name',
     pageItemsLimit?: number
   ): Observable<CountryListResponse> {
