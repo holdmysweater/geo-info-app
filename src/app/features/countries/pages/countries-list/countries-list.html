@@ -1,4 +1,4 @@
-<app-search-bar></app-search-bar>
+<app-search-bar (onInputChange)="onSearchBarInputChange($event)"></app-search-bar>
 <app-nav-tabs [defaultTabIndex]="0"></app-nav-tabs>
 <app-countries-table [countries]="countries"></app-countries-table>
 <app-pagination [index]="0"
