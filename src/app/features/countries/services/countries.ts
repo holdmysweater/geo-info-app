@@ -12,6 +12,7 @@ export class Countries {
   private readonly countryDetails$ = new BehaviorSubject<{ [code: string]: CountryDetail }>({});
   private readonly currentOffset$ = new BehaviorSubject<number>(0);
   private readonly pageItemsLimit$ = new BehaviorSubject<number>(6);
+  private readonly pageCount$ = new BehaviorSubject<number>(1);
 
   private links: Record<string, string> = {};
 
@@ -38,6 +39,10 @@ export class Countries {
 
   public getPageItemsLimit$(): Observable<number> {
     return this.pageItemsLimit$.asObservable();
+  }
+
+  public getPageCount$(): Observable<number> {
+    return this.pageCount$.asObservable();
   }
 
   // endregion
@@ -136,6 +141,7 @@ export class Countries {
     this.countries$.next(res.data);
     this.total$.next(res.metadata.totalCount);
     this.currentOffset$.next(offset);
+    this.setPageCount(res.metadata.totalCount);
     this.setLinks(res.links);
   }
 
@@ -147,6 +153,14 @@ export class Countries {
     const mapLinks: Record<string, string> = {};
     links.forEach(l => mapLinks[l.rel] = l.href);
     this.links = mapLinks;
+  }
+
+  private setPageCount(total: number): void {
+    this.pageItemsLimit$.pipe(
+      take(1)
+    ).subscribe(limit =>
+      this.pageCount$.next(Math.ceil(total / limit))
+    );
   }
 
   private fetchCountriesByLink(
