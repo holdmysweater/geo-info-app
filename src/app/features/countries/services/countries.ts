@@ -65,4 +65,102 @@ export class Countries {
   }
 
   // endregion
+
+  // region FETCH
+
+  public fetchCountryDetail(code: string, languageCode: string = 'ru'): Observable<CountryDetail> {
+    return this.api.getCountry(code, languageCode).pipe(
+      map(response => response.data),
+      tap(detail => {
+        const current = this.countryDetails$.value;
+        this.countryDetails$.next({ ...current, [code]: detail });
+      })
+    );
+  }
+
+  public fetchCountries(
+    namePrefix: string = '',
+    languageCode: string = 'ru',
+    sort: string = 'name',
+    pageItemsLimit?: number,
+    offset: number = 0
+  ): Observable<CountryListResponse> {
+    if (pageItemsLimit) this.setPageItemsLimit(pageItemsLimit);
+    return this.pageItemsLimit$.pipe(
+      take(1),
+      switchMap(limit =>
+        this.api.getCountries(offset, limit, namePrefix, languageCode, sort).pipe(
+          tap((res: CountryListResponse) => this.processCountryListResponse(res, offset))
+        )
+      )
+    );
+  }
+
+  public fetchPage(
+    pageIndex: number,
+    namePrefix: string = '',
+    languageCode: string = 'ru',
+    sort: string = 'name',
+    pageItemsLimit?: number
+  ): Observable<CountryListResponse> {
+    if (pageItemsLimit) this.setPageItemsLimit(pageItemsLimit);
+    return this.pageItemsLimit$.pipe(
+      take(1),
+      switchMap(limit =>
+        this.fetchCountries(namePrefix, languageCode, sort, limit, pageIndex * limit)
+      )
+    );
+  }
+
+  // endregion
+
+  // region PAGINATION
+
+  public fetchNext(): Observable<CountryListResponse> | undefined {
+    return this.fetchCountriesByLink('next');
+  }
+
+  public fetchPrev(): Observable<CountryListResponse> | undefined {
+    return this.fetchCountriesByLink('prev');
+  }
+
+  public fetchFirst(): Observable<CountryListResponse> | undefined {
+    return this.fetchCountriesByLink('first');
+  }
+
+  public fetchLast(): Observable<CountryListResponse> | undefined {
+    return this.fetchCountriesByLink('last');
+  }
+
+  // endregion
+
+  // region HELPERS
+
+  private processCountryListResponse(res: CountryListResponse, offset: number): void {
+    this.countries$.next(res.data);
+    this.total$.next(res.metadata.totalCount);
+    this.currentOffset$.next(offset);
+    this.setLinks(res.links);
+  }
+
+  private setLinks(links: CountryListLink[]): void {
+    const mapLinks: Record<string, string> = {};
+    links.forEach(l => mapLinks[l.rel] = l.href);
+    this.links = mapLinks;
+  }
+
+  private fetchCountriesByLink(
+    rel: 'next' | 'prev' | 'first' | 'last'
+  ): Observable<CountryListResponse> | undefined {
+    const link = this.links[rel];
+    if (!link) return;
+    return this.pageItemsLimit$.pipe(
+      take(1),
+      switchMap(limit => this.api.getByLink(link).pipe(
+        tap((res: CountryListResponse) => this.processCountryListResponse(res, limit))
+      ))
+    );
+  }
+
+  // endregion
 }
