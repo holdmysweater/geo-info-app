@@ -15,4 +15,7 @@ import { Pagination } from '../../../../shared/components/pagination/pagination'
 })
 export class CountriesList {
 
+  protected onPageClick(pageIndex: number): void {
+    console.log('countries-list.ts: clicked on page index = ' + pageIndex);
+  }
 }
