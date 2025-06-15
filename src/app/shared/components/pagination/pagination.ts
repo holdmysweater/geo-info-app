@@ -11,5 +11,6 @@ import { TuiPagination } from '@taiga-ui/kit';
 })
 export class Pagination {
   public index = input<number>();
+  public length = input<number>();
 
 }
