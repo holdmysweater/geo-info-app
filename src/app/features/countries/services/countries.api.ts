@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from "rxjs";
-import { CountryDetailResponse, CountryListResponse } from "../models/country.model";
+import { CountryListResponse } from "../models/country.model";
 
 @Injectable({
   providedIn: 'root'
@@ -27,16 +27,5 @@ export class CountriesApi {
       .set('sort', sort);
 
     return this.http.get<CountryListResponse>(this.baseUrl + '/v1/geo/countries', { params });
-  }
-
-  public getCountry(code: string, languageCode: string): Observable<CountryDetailResponse> {
-    const params = new HttpParams()
-      .set('languageCode', languageCode)
-
-    return this.http.get<CountryDetailResponse>(this.baseUrl + '/v1/geo/countries/' + code, { params });
-  }
-
-  public getByLink(link: string): Observable<CountryListResponse> {
-    return this.http.get<CountryListResponse>(this.baseUrl + link);
   }
 }
