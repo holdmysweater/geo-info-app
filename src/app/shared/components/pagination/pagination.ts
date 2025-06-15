@@ -1,8 +1,11 @@
 import { Component } from '@angular/core';
+import { TuiPagination } from '@taiga-ui/kit';
 
 @Component({
   selector: 'app-pagination',
-  imports: [],
+  imports: [
+    TuiPagination
+  ],
   templateUrl: './pagination.html',
   styleUrl: './pagination.css'
 })
