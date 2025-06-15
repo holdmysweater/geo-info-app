@@ -12,13 +12,13 @@ import { TuiRadioList } from '@taiga-ui/kit';
   styleUrl: './language-settings.css'
 })
 export class LanguageSettings {
-  public change = output<string>();
+  public onLanguageChange = output<string>();
 
   protected readonly options: string[] = ['RU', 'EN'];
   protected language: string = this.options[0]!;
 
   protected onValueChanged(): void {
     console.log('language-settings.ts: changed value to \"' + this.language + '\"');
-    this.change.emit(this.language);
+    this.onLanguageChange.emit(this.language);
   }
 }
