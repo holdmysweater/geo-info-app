@@ -45,4 +45,24 @@ export class Countries {
   }
 
   // endregion
+
+  // region PAGE CHECKS
+
+  public hasFirstPage(): boolean {
+    return !!this.links['first'];
+  }
+
+  public hasLastPage(): boolean {
+    return !!this.links['last'];
+  }
+
+  public hasPreviousPage(): boolean {
+    return !!this.links['prev'];
+  }
+
+  public hasNextPage(): boolean {
+    return !!this.links['next'];
+  }
+
+  // endregion
 }
