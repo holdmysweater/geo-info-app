@@ -12,6 +12,8 @@
   </tr>
   </thead>
   <tbody tuiTbody>
-
+    @for (country of countries(); track country.code) {
+      <app-country-row [countryCode]="country.code"></app-country-row>
+    }
   </tbody>
 </table>
