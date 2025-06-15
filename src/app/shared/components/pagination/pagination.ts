@@ -14,4 +14,8 @@ export class Pagination {
   public length = input<number>();
   public click = output<number>();
 
+  protected onClick(index: number): void {
+    console.log('pagination.ts: clicked on \"' + index + '\"');
+    this.click.emit(index);
+  }
 }
