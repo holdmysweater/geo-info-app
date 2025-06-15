@@ -5,3 +5,12 @@
   align-items: stretch;
   justify-content: space-between;
 }
+
+app-nav-tabs {
+  margin-top: 10px;
+}
+
+app-pagination {
+  margin-top: 15px;
+  align-self: start;
+}
