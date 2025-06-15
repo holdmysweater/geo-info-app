@@ -1,5 +1,5 @@
 import { Component, input } from '@angular/core';
-import { TuiTableDirective, TuiTableTbody, TuiTableTh } from "@taiga-ui/addon-table";
+import { TuiTableDirective, TuiTableTbody, TuiTableTd, TuiTableTh } from "@taiga-ui/addon-table";
 import { FormsModule } from '@angular/forms';
 import { CountryDetail } from '../../models/country.model';
 
@@ -9,7 +9,8 @@ import { CountryDetail } from '../../models/country.model';
     TuiTableDirective,
     TuiTableTh,
     TuiTableTbody,
-    FormsModule
+    FormsModule,
+    TuiTableTd
   ],
   templateUrl: './countries-table.html',
   styleUrl: './countries-table.css'
