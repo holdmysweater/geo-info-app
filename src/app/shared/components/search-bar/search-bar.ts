@@ -14,12 +14,12 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './search-bar.css'
 })
 export class SearchBar {
-  public change = output<string>();
+  public onInputChange = output<string>();
 
   protected value: string | undefined;
 
   protected onValueChanged(): void {
     console.log('search-bar.ts: new value is \"' + this.value + '\"');
-    this.change.emit(this.value!);
+    this.onInputChange.emit(this.value!);
   }
 }
