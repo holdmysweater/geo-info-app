@@ -14,8 +14,8 @@ export class Pagination {
   public length = input<number>();
   public onPageClick = output<number>();
 
-  protected onClick(index: number): void {
-    console.log('pagination.ts: clicked on \"' + index + '\"');
-    this.onPageClick.emit(index);
+  protected onClick(pageIndex: number): void {
+    console.log('pagination.ts: clicked on \"' + pageIndex + '\"');
+    this.onPageClick.emit(pageIndex);
   }
 }
