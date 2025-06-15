@@ -17,6 +17,7 @@ import { CountrySummary } from '../../models/country.model';
 })
 export class CountriesList {
   protected countries: CountrySummary[] = [];
+  protected pageCount: number = 1;
 
   constructor(private service: Countries) {
   }
@@ -24,6 +25,10 @@ export class CountriesList {
   private ngOnInit(): void {
     this.service.getCountries$().subscribe(countries => {
       this.countries = countries;
+    });
+
+    this.service.getPageCount$().subscribe(pageCount => {
+      this.pageCount = pageCount;
     });
 
     this.service.fetchCountries().subscribe();
