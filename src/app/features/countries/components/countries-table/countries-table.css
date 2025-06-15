@@ -6,6 +6,10 @@
   font-size: 14px;
 }
 
+[tuiTh] {
+  border-top: none;
+}
+
 [tuiTable][data-size='s'] [tuiTitle] {
   flex-direction: row;
   gap: 0.375rem;
