@@ -14,3 +14,7 @@ app-pagination {
   margin-top: 15px;
   align-self: start;
 }
+
+app-countries-table {
+  min-height: 308px;
+}
