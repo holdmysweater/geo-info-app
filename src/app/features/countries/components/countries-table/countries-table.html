@@ -10,6 +10,9 @@
     >ID страны
     </th>
     <th tuiTh
+        [style.width]="'60px'"
+    ></th>
+    <th tuiTh
         [style.width]="'250px'"
     >Наименование
     </th>
@@ -28,6 +31,13 @@
       <tr>
         <td tuiTd>
           {{ country.wikiDataId }}
+        </td>
+        <td tuiTd>
+          <tui-icon
+            icon="@tui.external-link"
+            [style.color]="'#6a6c7e'"
+            [style.width]="'15px'"
+          />
         </td>
         <td tuiTd>
           {{ country.name }}
