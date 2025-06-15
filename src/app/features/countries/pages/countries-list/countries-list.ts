@@ -4,6 +4,7 @@ import { NavTabs } from '../../../../shared/components/nav-tabs/nav-tabs';
 import { Pagination } from '../../../../shared/components/pagination/pagination';
 import { Countries } from '../../services/countries';
 import { CountriesTable } from '../../components/countries-table/countries-table';
+import { CountrySummary } from '../../models/country.model';
 
 @Component({
   selector: 'app-countries-list',
@@ -17,7 +18,7 @@ import { CountriesTable } from '../../components/countries-table/countries-table
   styleUrl: './countries-list.css'
 })
 export class CountriesList {
-  protected countries: string[] = [];
+  protected countries: CountrySummary[] = [];
   protected pageCount: number = 1;
 
   constructor(private service: Countries) {
@@ -27,7 +28,7 @@ export class CountriesList {
     this.service.getCountries$().subscribe(countries => {
       this.countries = [];
       for (const country of countries) {
-        this.countries.push(country.code);
+        this.countries.push(country);
       }
     });
 
