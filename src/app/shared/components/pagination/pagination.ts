@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { TuiPagination } from '@taiga-ui/kit';
 
 @Component({
@@ -10,5 +10,6 @@ import { TuiPagination } from '@taiga-ui/kit';
   styleUrl: './pagination.css'
 })
 export class Pagination {
+  public index = input<number>();
 
 }
