@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { TuiPagination } from '@taiga-ui/kit';
 
 @Component({
@@ -12,5 +12,6 @@ import { TuiPagination } from '@taiga-ui/kit';
 export class Pagination {
   public index = input<number>();
   public length = input<number>();
+  public click = output<number>();
 
 }
