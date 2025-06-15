@@ -18,10 +18,6 @@ export class Countries {
   constructor(private readonly api: CountriesApi) {
   }
 
-  private setPageItemsLimit(limit: number): void {
-    this.pageItemsLimit$.next(limit);
-  }
-
   // region GETTERS
 
   public getCountries$(): Observable<CountrySummary[]> {
@@ -141,6 +137,10 @@ export class Countries {
     this.total$.next(res.metadata.totalCount);
     this.currentOffset$.next(offset);
     this.setLinks(res.links);
+  }
+
+  private setPageItemsLimit(limit: number): void {
+    this.pageItemsLimit$.next(limit);
   }
 
   private setLinks(links: CountryListLink[]): void {
