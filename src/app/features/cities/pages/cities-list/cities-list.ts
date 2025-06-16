@@ -6,6 +6,7 @@ import { PopulatedPlaceSummary } from '../../models/city.model';
 import { Countries } from '../../../countries/services/countries';
 import { CitiesTable } from '../../components/cities-table/cities-table';
 import { TuiTextfieldComponent, TuiTextfieldDirective, TuiTextfieldOptionsDirective } from '@taiga-ui/core';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-cities-list',
@@ -15,7 +16,9 @@ import { TuiTextfieldComponent, TuiTextfieldDirective, TuiTextfieldOptionsDirect
     CitiesTable,
     TuiTextfieldComponent,
     TuiTextfieldOptionsDirective,
-    TuiTextfieldDirective
+    TuiTextfieldDirective,
+    FormsModule,
+    ReactiveFormsModule
   ],
   templateUrl: './cities-list.html',
   styleUrl: './cities-list.css'
@@ -25,7 +28,7 @@ export class CitiesList {
   protected countries: string[] = [];
   protected cities: PopulatedPlaceSummary[] = [];
   protected pageCount: number = 1;
-  protected searchBarInput: string = '';
+  protected searchBarInput: FormControl<string | null> = new FormControl('');
 
   constructor(private service: Cities, private countryService: Countries) {
   }
@@ -49,17 +52,17 @@ export class CitiesList {
       this.pageCount = pageCount;
     });
 
-    this.service.fetchCities(this.searchBarInput).subscribe();
+    this.countryService.getCountries$().subscribe();
+    this.service.fetchCities(this.searchBarInput.value ?? '').subscribe();
   }
 
   protected onPageClick(pageIndex: number): void {
     console.log('cities-list.ts: clicked on page index = ' + pageIndex);
-    this.service.fetchPage(this.wikiId, pageIndex, this.searchBarInput).subscribe();
+    this.service.fetchPage(this.wikiId, pageIndex, this.searchBarInput.value ?? '').subscribe();
   }
 
-  protected onSearchBarInputChange(searchString: string) {
-    console.log('cities-list.ts: new search bar input = \"' + searchString + '\"');
-    this.searchBarInput = searchString;
-    this.service.fetchCities(this.searchBarInput).subscribe();
+  protected onSearchBarInputChange() {
+    console.log('cities-list.ts: new search bar input = \"' + (this.searchBarInput.value ?? '') + '\"');
+    this.service.fetchCities(this.wikiId, this.searchBarInput.value ?? '').subscribe();
   }
 }
