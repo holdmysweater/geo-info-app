@@ -7,7 +7,7 @@
 }
 
 app-cities-table {
-  min-height: 308px;
+  min-height: 264px;
 }
 
 :host ::ng-deep tui-pagination [tuiButton] {
