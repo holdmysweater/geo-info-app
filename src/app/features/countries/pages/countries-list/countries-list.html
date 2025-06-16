@@ -1,4 +1,14 @@
-<app-search-bar (onInputChange)="onSearchBarInputChange($event)"></app-search-bar>
+<tui-textfield
+  #s
+  iconStart="@tui.search"
+  tuiTextfieldSize="s"
+  [style.width]="'225px'"
+>
+  <input
+    tuiTextfield
+    [placeholder]="s.focused() ? '' : 'Поиск'"
+  />
+</tui-textfield>
 <app-nav-tabs [defaultTabIndex]="0"></app-nav-tabs>
 <app-countries-table [countries]="countries"></app-countries-table>
 <app-pagination [index]="0"
