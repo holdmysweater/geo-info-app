@@ -7,6 +7,8 @@
   <input
     tuiTextfield
     [placeholder]="s.focused() ? '' : 'Поиск'"
+    [formControl]="searchBarInput"
+    (change)="onSearchBarInputChange()"
   />
 </tui-textfield>
 <app-nav-tabs [defaultTabIndex]="0"></app-nav-tabs>

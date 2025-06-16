@@ -4,7 +4,7 @@ import { Pagination } from '../../../../shared/components/pagination/pagination'
 import { Countries } from '../../services/countries';
 import { CountriesTable } from '../../components/countries-table/countries-table';
 import { CountrySummary } from '../../models/country.model';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TuiTextfieldComponent, TuiTextfieldDirective, TuiTextfieldOptionsDirective } from '@taiga-ui/core';
 
 @Component({
@@ -25,7 +25,7 @@ import { TuiTextfieldComponent, TuiTextfieldDirective, TuiTextfieldOptionsDirect
 export class CountriesList {
   protected countries: CountrySummary[] = [];
   protected pageCount: number = 1;
-  protected searchBarInput: string = '';
+  protected searchBarInput: FormControl<string | null> = new FormControl('');
 
   constructor(private service: Countries) {
   }
@@ -42,17 +42,16 @@ export class CountriesList {
       this.pageCount = pageCount;
     });
 
-    this.service.fetchCountries(this.searchBarInput).subscribe();
+    this.service.fetchCountries(this.searchBarInput.value ?? '').subscribe();
   }
 
   protected onPageClick(pageIndex: number): void {
     console.log('countries-list.ts: clicked on page index = ' + pageIndex);
-    this.service.fetchPage(pageIndex, this.searchBarInput).subscribe();
+    this.service.fetchPage(pageIndex, this.searchBarInput.value ?? '').subscribe();
   }
 
-  protected onSearchBarInputChange(searchString: string) {
-    console.log('countries-list.ts: new search bar input = \"' + searchString + '\"');
-    this.searchBarInput = searchString;
-    this.service.fetchCountries(this.searchBarInput).subscribe();
+  protected onSearchBarInputChange() {
+    console.log('countries-list.ts: new search bar input = \"' + (this.searchBarInput.value ?? '') + '\"');
+    this.service.fetchCountries(this.searchBarInput.value ?? '').subscribe();
   }
 }
