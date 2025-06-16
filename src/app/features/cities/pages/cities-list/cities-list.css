@@ -5,3 +5,20 @@
   align-items: stretch;
   justify-content: space-between;
 }
+
+:host ::ng-deep tui-pagination [tuiButton] {
+  border-radius: 100%;
+  width: 24px !important;
+  height: 24px;
+  font-weight: bold !important;
+}
+
+:host ::ng-deep tui-pagination div {
+  display: flex;
+  align-items: center;
+}
+
+:host ::ng-deep tui-pagination [tuiAppearance][data-appearance=primary] {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.3) !important;
+}
+

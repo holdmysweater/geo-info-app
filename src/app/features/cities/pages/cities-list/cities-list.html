@@ -13,7 +13,11 @@
   />
 </tui-textfield>
 <app-cities-table></app-cities-table>
-<app-pagination [index]="0"
-                [length]="pageCount"
-                (onPageClick)="onPageClick($event)"
-></app-pagination>
+<tui-pagination
+  [index]="0"
+  [length]="pageCount"
+  (indexChange)="onPageClick($event)"
+  [style.margin-top]="'15px'"
+  [style.align-self]="'start'"
+/>
+
