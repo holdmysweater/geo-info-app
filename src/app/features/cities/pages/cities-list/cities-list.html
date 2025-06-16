@@ -22,19 +22,39 @@
   </button>
 </tui-tabs>
 
-<tui-textfield
-  #s
-  iconStart="@tui.search"
-  tuiTextfieldSize="s"
-  [style.width]="'225px'"
->
-  <input
-    tuiTextfield
-    [placeholder]="s.focused() ? '' : 'Поиск'"
-    [formControl]="searchBarInput"
-    (change)="onSearchBarInputChange()"
-  />
-</tui-textfield>
+<div>
+  <tui-textfield tuiChevron
+                 tuiTextfieldSize="s"
+                 [style.width]="'250px'"
+  >
+    <input
+      placeholder="Выберите страну"
+      tuiComboBox
+      [formControl]="wikiId"
+      (change)="onDropdownChange()"
+    />
+
+    <tui-data-list-wrapper
+      *tuiTextfieldDropdown
+      new
+      [items]="countries"
+    />
+  </tui-textfield>
+
+  <tui-textfield
+    #s
+    iconStart="@tui.search"
+    tuiTextfieldSize="s"
+    [style.width]="'225px'"
+  >
+    <input
+      tuiTextfield
+      [placeholder]="s.focused() ? '' : 'Поиск'"
+      [formControl]="searchBarInput"
+      (change)="onSearchBarInputChange()"
+    />
+  </tui-textfield>
+</div>
 
 <app-cities-table [cities]="cities"></app-cities-table>
 

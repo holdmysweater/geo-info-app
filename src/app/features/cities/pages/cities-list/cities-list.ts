@@ -3,9 +3,21 @@ import { Cities } from '../../services/cities';
 import { PopulatedPlaceSummary } from '../../models/city.model';
 import { Countries } from '../../../countries/services/countries';
 import { CitiesTable } from '../../components/cities-table/cities-table';
-import { TuiTextfieldComponent, TuiTextfieldDirective, TuiTextfieldOptionsDirective } from '@taiga-ui/core';
+import {
+  TuiTextfieldComponent,
+  TuiTextfieldDirective,
+  TuiTextfieldDropdownDirective,
+  TuiTextfieldOptionsDirective
+} from '@taiga-ui/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { TuiPagination, TuiTab, TuiTabsHorizontal } from '@taiga-ui/kit';
+import {
+  TuiChevron,
+  TuiComboBox,
+  TuiDataListWrapperComponent,
+  TuiPagination,
+  TuiTab,
+  TuiTabsHorizontal
+} from '@taiga-ui/kit';
 import { RouterLink } from '@angular/router';
 
 @Component({
@@ -20,13 +32,17 @@ import { RouterLink } from '@angular/router';
     TuiPagination,
     TuiTab,
     TuiTabsHorizontal,
-    RouterLink
+    RouterLink,
+    TuiChevron,
+    TuiComboBox,
+    TuiDataListWrapperComponent,
+    TuiTextfieldDropdownDirective
   ],
   templateUrl: './cities-list.html',
   styleUrl: './cities-list.css'
 })
 export class CitiesList {
-  protected wikiId: string = '';
+  protected wikiId: FormControl<string | null> = new FormControl('');
   protected countries: string[] = [];
   protected cities: PopulatedPlaceSummary[] = [];
   protected pageCount: number = 1;
@@ -61,11 +77,18 @@ export class CitiesList {
 
   protected onPageClick(pageIndex: number): void {
     console.log('cities-list.ts: clicked on page index = ' + pageIndex);
-    this.service.fetchPage(this.wikiId, pageIndex, this.searchBarInput.value ?? '').subscribe();
+    this.service.fetchPage(this.wikiId.value ?? '', pageIndex, this.searchBarInput.value ?? '').subscribe();
   }
 
   protected onSearchBarInputChange() {
     console.log('cities-list.ts: new search bar input = \"' + (this.searchBarInput.value ?? '') + '\"');
-    this.service.fetchCities(this.wikiId, this.searchBarInput.value ?? '').subscribe();
+    this.service.fetchCities(this.wikiId.value ?? '', this.searchBarInput.value ?? '').subscribe();
+  }
+
+  protected onDropdownChange() {
+    if (this.wikiId.value ?? '' === '') return;
+
+    console.log('cities-list.ts: new dropdown input = \"' + (this.wikiId.value ?? '') + '\"');
+    this.service.fetchCities(this.wikiId.value ?? '', this.searchBarInput.value ?? '').subscribe();
   }
 }
