@@ -1,1 +1,7 @@
 <app-nav-tabs [defaultTabIndex]="1"></app-nav-tabs>
+<app-search-bar (onInputChange)="onSearchBarInputChange($event)"></app-search-bar>
+<app-cities-table></app-cities-table>
+<app-pagination [index]="0"
+                [length]="pageCount"
+                (onPageClick)="onPageClick($event)"
+></app-pagination>
