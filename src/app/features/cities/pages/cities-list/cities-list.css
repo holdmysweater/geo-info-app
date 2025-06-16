@@ -6,6 +6,10 @@
   justify-content: space-between;
 }
 
+app-cities-table {
+  min-height: 308px;
+}
+
 :host ::ng-deep tui-pagination [tuiButton] {
   border-radius: 100%;
   width: 24px !important;
