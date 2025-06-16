@@ -10,7 +10,7 @@ export class Cities {
   private readonly cities$ = new BehaviorSubject<PopulatedPlaceSummary[]>([]);
   private readonly total$ = new BehaviorSubject<number>(0);
   private readonly currentOffset$ = new BehaviorSubject<number>(0);
-  private readonly pageItemsLimit$ = new BehaviorSubject<number>(6);
+  private readonly pageItemsLimit$ = new BehaviorSubject<number>(5);
   private readonly pageCount$ = new BehaviorSubject<number>(1);
 
   constructor(private readonly api: CitiesApi) {
