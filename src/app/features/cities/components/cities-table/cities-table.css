@@ -1,0 +1,17 @@
+[tuiTh], [tuiTd] {
+  background: none;
+  border-inline-start: none;
+  border-inline-end: none;
+  font-weight: normal;
+  font-size: 14px;
+}
+
+[tuiTh] {
+  border-top: none;
+}
+
+[tuiTable][data-size='s'] [tuiTitle] {
+  flex-direction: row;
+  gap: 0.375rem;
+  font-weight: normal;
+}

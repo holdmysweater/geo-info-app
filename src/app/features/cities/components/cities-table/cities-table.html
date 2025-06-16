@@ -1,1 +1,56 @@
-<p>cities-table works!</p>
+<table
+  tuiTable
+  [size]="'m'"
+  [style.width.rem]="58"
+>
+  <thead>
+  <tr>
+    <th tuiTh
+        [style.width]="'120px'"
+        [style.padding-left]="0"
+    >Страна
+    </th>
+    <th tuiTh
+        [style.width]="'150px'"
+        [style.padding-left]="0"
+    >Наименование
+    </th>
+    <th tuiTh
+        [style.width]="'100px'"
+        [style.padding-left]="0"
+    >Регион
+    </th>
+    <th tuiTh
+        [style.width]="'100px'"
+        [style.padding-left]="0"
+    >Население
+    </th>
+  </tr>
+  </thead>
+  <tbody tuiTbody>
+    @for (city of cities(); track city) {
+      <tr>
+        <td tuiTd
+            [style.padding]="0"
+        >
+          {{ city.country }}
+        </td>
+        <td tuiTd
+            [style.padding]="0"
+        >
+          {{ city.name }}
+        </td>
+        <td tuiTd
+            [style.padding]="0"
+        >
+          {{ city.region }}
+        </td>
+        <td tuiTd
+            [style.padding]="0"
+        >
+          {{ city.population }}
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>
