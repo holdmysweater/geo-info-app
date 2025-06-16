@@ -1,19 +1,21 @@
 import { Component } from '@angular/core';
 import { NavTabs } from '../../../../shared/components/nav-tabs/nav-tabs';
 import { Pagination } from '../../../../shared/components/pagination/pagination';
-import { SearchBar } from '../../../../shared/components/search-bar/search-bar';
 import { Cities } from '../../services/cities';
 import { PopulatedPlaceSummary } from '../../models/city.model';
 import { Countries } from '../../../countries/services/countries';
 import { CitiesTable } from '../../components/cities-table/cities-table';
+import { TuiTextfieldComponent, TuiTextfieldDirective, TuiTextfieldOptionsDirective } from '@taiga-ui/core';
 
 @Component({
   selector: 'app-cities-list',
   imports: [
     NavTabs,
     Pagination,
-    SearchBar,
-    CitiesTable
+    CitiesTable,
+    TuiTextfieldComponent,
+    TuiTextfieldOptionsDirective,
+    TuiTextfieldDirective
   ],
   templateUrl: './cities-list.html',
   styleUrl: './cities-list.css'
