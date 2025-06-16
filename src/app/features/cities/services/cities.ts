@@ -1,9 +1,105 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable, switchMap, take, tap } from 'rxjs';
+import { CitiesListResponse, PopulatedPlaceSummary } from '../models/city.model';
+import { CitiesApi } from './cities.api';
 
 @Injectable({
   providedIn: 'root'
 })
 export class Cities {
+  private readonly cities$ = new BehaviorSubject<PopulatedPlaceSummary[]>([]);
+  private readonly total$ = new BehaviorSubject<number>(0);
+  private readonly currentOffset$ = new BehaviorSubject<number>(0);
+  private readonly pageItemsLimit$ = new BehaviorSubject<number>(6);
+  private readonly pageCount$ = new BehaviorSubject<number>(1);
 
-  constructor() { }
+  constructor(private readonly api: CitiesApi) {
+  }
+
+  // region GETTERS
+
+  public getCities$(): Observable<PopulatedPlaceSummary[]> {
+    return this.cities$.asObservable();
+  }
+
+  public getTotal$(): Observable<number> {
+    return this.total$.asObservable();
+  }
+
+  public getCurrentOffset$(): Observable<number> {
+    return this.currentOffset$.asObservable();
+  }
+
+  public getPageItemsLimit$(): Observable<number> {
+    return this.pageItemsLimit$.asObservable();
+  }
+
+  public getPageCount$(): Observable<number> {
+    return this.pageCount$.asObservable();
+  }
+
+  // endregion
+
+  // region FETCH
+
+  public fetchCities(
+    wikiId: string,
+    namePrefix: string = '',
+    languageCode: string = 'en',
+    sort: string = 'name',
+    pageItemsLimit?: number,
+    offset: number = 0
+  ): Observable<CitiesListResponse> {
+    if (pageItemsLimit) this.setPageItemsLimit(pageItemsLimit);
+    return this.pageItemsLimit$.pipe(
+      take(1),
+      switchMap(limit =>
+        this.api.getCities(wikiId, offset, limit, namePrefix, languageCode, sort).pipe(
+          tap((res: CitiesListResponse) => this.processCityListResponse(res, offset))
+        )
+      )
+    );
+  }
+
+  public fetchPage(
+    wikiId: string,
+    pageIndex: number,
+    namePrefix: string = '',
+    languageCode: string = 'en',
+    sort: string = 'name',
+    pageItemsLimit?: number
+  ): Observable<CitiesListResponse> {
+    if (pageItemsLimit) this.setPageItemsLimit(pageItemsLimit);
+    return this.pageItemsLimit$.pipe(
+      take(1),
+      switchMap(limit =>
+        this.fetchCities(wikiId, namePrefix, languageCode, sort, limit, pageIndex * limit)
+      )
+    );
+  }
+
+  // endregion
+
+  // region HELPERS
+
+  private processCityListResponse(res: CitiesListResponse, offset: number): void {
+    this.cities$.next(res.data);
+    this.total$.next(res.metadata.totalCount);
+    this.currentOffset$.next(offset);
+    this.setPageCount(res.metadata.totalCount);
+  }
+
+  private setPageItemsLimit(limit: number): void {
+    this.pageItemsLimit$.next(limit);
+  }
+
+  private setPageCount(total: number): void {
+    this.pageItemsLimit$.pipe(
+      take(1)
+    ).subscribe(limit =>
+      this.pageCount$.next(Math.ceil(total / limit))
+    );
+  }
+
+  // endregion
 }
