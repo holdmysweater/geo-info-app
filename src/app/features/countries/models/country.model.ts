@@ -20,18 +20,3 @@ export interface CountryListResponse {
   data: CountrySummary[];
   metadata: CountryListMetadata;
 }
-
-export interface CountryDetail {
-  capital: string;
-  code: string;
-  callingCode: string;
-  currencyCodes: string[];
-  flagImageUri: string;
-  name: string;
-  numRegions: number;
-  wikiDataId: string;
-}
-
-export interface CountryDetailResponse {
-  data: CountryDetail;
-}
