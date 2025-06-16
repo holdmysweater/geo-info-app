@@ -11,8 +11,11 @@
     (change)="onSearchBarInputChange()"
   />
 </tui-textfield>
+
 <app-nav-tabs [defaultTabIndex]="0"></app-nav-tabs>
+
 <app-countries-table [countries]="countries"></app-countries-table>
+
 <tui-pagination
   [index]="0"
   [length]="pageCount"
