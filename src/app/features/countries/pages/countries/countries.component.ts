@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CountriesService } from '../../services/countries.service';
-import { CountriesTable } from '../../components/countries-table/countries-table';
+import { CountriesTableComponent } from '../../components/countries-table/countries-table.component';
 import { CountrySummary } from '../../models/country.model';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TuiTextfieldComponent, TuiTextfieldDirective, TuiTextfieldOptionsDirective } from '@taiga-ui/core';
@@ -10,7 +10,7 @@ import { RouterLink } from '@angular/router';
 @Component({
   selector: 'app-countries',
   imports: [
-    CountriesTable,
+    CountriesTableComponent,
     FormsModule,
     TuiTextfieldComponent,
     TuiTextfieldDirective,

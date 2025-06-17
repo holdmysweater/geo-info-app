@@ -14,9 +14,9 @@ import { TuiIcon } from '@taiga-ui/core';
     TuiTableTd,
     TuiIcon
   ],
-  templateUrl: './countries-table.html',
-  styleUrl: './countries-table.css'
+  templateUrl: './countries-table.component.html',
+  styleUrl: './countries-table.component.css'
 })
-export class CountriesTable {
+export class CountriesTableComponent {
   public countries = input<CountrySummary[]>();
 }
