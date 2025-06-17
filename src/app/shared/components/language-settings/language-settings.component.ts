@@ -8,8 +8,8 @@ import { TuiRadioList } from '@taiga-ui/kit';
     FormsModule,
     TuiRadioList
   ],
-  templateUrl: './language-settings.html',
-  styleUrl: './language-settings.css'
+  templateUrl: './language-settings.component.html',
+  styleUrl: './language-settings.component.css'
 })
 export class LanguageSettings {
   public onLanguageChange = output<string>();
@@ -18,7 +18,7 @@ export class LanguageSettings {
   protected language: string = this.options[0]!;
 
   protected onValueChanged(): void {
-    console.log('language-settings.ts: changed value to \"' + this.language + '\"');
+    console.log('language-settings.component.ts: changed value to \"' + this.language + '\"');
     this.onLanguageChange.emit(this.language);
   }
 }

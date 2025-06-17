@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { LanguageSettings } from './language-settings';
+import { LanguageSettings } from './language-settings.component';
 
 describe('LanguageSettings', () => {
   let component: LanguageSettings;
@@ -10,7 +10,7 @@ describe('LanguageSettings', () => {
     await TestBed.configureTestingModule({
       imports: [LanguageSettings]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(LanguageSettings);
     component = fixture.componentInstance;

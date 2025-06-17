@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { TuiTitle } from '@taiga-ui/core';
-import { LanguageSettings } from '../language-settings/language-settings';
+import { LanguageSettings } from '../language-settings/language-settings.component';
 
 @Component({
   selector: 'app-header',
