@@ -90,9 +90,9 @@ export class Cities {
     limit: number = 10,
     languageCode: string = 'en',
     sort: string = 'name',
-  ) {
-    this.countryApi.getCountries(0, limit, namePrefix, languageCode, sort).pipe(
-      tap((res: CountryListResponse) => {
+  ): Observable<CountryData[]> {
+    return this.countryApi.getCountries(0, limit, namePrefix, languageCode, sort).pipe(
+      switchMap((res: CountryListResponse) => {
         let values = [];
         for (const data of res.data) {
           values.push({
@@ -100,7 +100,8 @@ export class Cities {
             wikiDataId: data.wikiDataId
           } as CountryData)
         }
-        this.countriesSearchList$.next(values);
+        this.countriesSearchList$.next(values)
+        return this.getCountriesSearchList$();
       })
     )
   }
