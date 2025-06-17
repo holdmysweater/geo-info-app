@@ -10,9 +10,9 @@ import { PopulatedPlaceSummary } from '../../models/city.model';
     TuiTableTd,
     TuiTableTh
   ],
-  templateUrl: './cities-table.html',
-  styleUrl: './cities-table.css'
+  templateUrl: './cities-table.component.html',
+  styleUrl: './cities-table.component.css'
 })
-export class CitiesTable {
+export class CitiesTableComponent {
   public cities = input<PopulatedPlaceSummary[]>();
 }

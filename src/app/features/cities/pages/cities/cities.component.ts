@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CitiesService } from '../../services/cities.service';
 import { PopulatedPlaceSummary } from '../../models/city.model';
-import { CitiesTable } from '../../components/cities-table/cities-table';
+import { CitiesTableComponent } from '../../components/cities-table/cities-table.component';
 import {
   TuiTextfieldComponent,
   TuiTextfieldDirective,
@@ -23,7 +23,7 @@ import { CountryData } from '../../../countries/models/country.model';
 @Component({
   selector: 'app-cities',
   imports: [
-    CitiesTable,
+    CitiesTableComponent,
     TuiTextfieldComponent,
     TuiTextfieldOptionsDirective,
     TuiTextfieldDirective,
