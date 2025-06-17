@@ -21,7 +21,7 @@ import { RouterLink } from '@angular/router';
 import { CountryData } from '../../../countries/models/country.model';
 
 @Component({
-  selector: 'app-cities-list',
+  selector: 'app-cities',
   imports: [
     CitiesTable,
     TuiTextfieldComponent,
@@ -38,10 +38,10 @@ import { CountryData } from '../../../countries/models/country.model';
     TuiDataListWrapperComponent,
     TuiTextfieldDropdownDirective
   ],
-  templateUrl: './cities-list.html',
-  styleUrl: './cities-list.css'
+  templateUrl: './cities.component.html',
+  styleUrl: './cities.component.css'
 })
-export class CitiesList {
+export class CitiesComponent {
   protected countryDropdown: FormControl<string | null> = new FormControl('');
   protected countries: CountryData[] = [];
   protected cities: PopulatedPlaceSummary[] = [];
@@ -73,19 +73,19 @@ export class CitiesList {
   }
 
   protected onPageClick(pageIndex: number): void {
-    console.log('cities-list.ts: clicked on page index = ' + pageIndex);
+    console.log('cities.ts: clicked on page index = ' + pageIndex);
     this.service.fetchPage(this.countryDropdown.value ?? '', pageIndex, this.searchBarInput.value ?? '').subscribe();
   }
 
   protected onSearchBarInputChange() {
-    console.log('cities-list.ts: new search bar input = \"' + (this.searchBarInput.value ?? '') + '\"');
+    console.log('cities.ts: new search bar input = \"' + (this.searchBarInput.value ?? '') + '\"');
     this.service.fetchCities(this.countryDropdown.value ?? '', this.searchBarInput.value ?? '').subscribe();
   }
 
   protected onDropdownChange() {
     if (this.countryDropdown.value ?? '' === '') return;
 
-    console.log('cities-list.ts: new dropdown input = \"' + (this.countryDropdown.value ?? '') + '\"');
+    console.log('cities.ts: new dropdown input = \"' + (this.countryDropdown.value ?? '') + '\"');
     this.service.fetchCities(this.countryDropdown.value ?? '', this.searchBarInput.value ?? '').subscribe();
   }
 }
