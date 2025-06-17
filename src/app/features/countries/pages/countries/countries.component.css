@@ -6,10 +6,6 @@
   justify-content: space-between;
 }
 
-app-nav-tabs {
-  margin-top: 10px;
-}
-
 app-countries-table {
   min-height: 308px;
 }

@@ -13,3 +13,7 @@ tui-root div {
   height: 556px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.2);
 }
+
+app-nav-tabs {
+  margin-bottom: 22px;
+}

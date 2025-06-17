@@ -4,8 +4,7 @@ import { CountriesTableComponent } from '../../components/countries-table/countr
 import { CountrySummary } from '../../models/country.model';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TuiTextfieldComponent, TuiTextfieldDirective, TuiTextfieldOptionsDirective } from '@taiga-ui/core';
-import { TuiPagination, TuiTab, TuiTabsHorizontal } from '@taiga-ui/kit';
-import { RouterLink } from '@angular/router';
+import { TuiPagination } from '@taiga-ui/kit';
 
 @Component({
   selector: 'app-countries',
@@ -16,10 +15,7 @@ import { RouterLink } from '@angular/router';
     TuiTextfieldDirective,
     TuiTextfieldOptionsDirective,
     ReactiveFormsModule,
-    TuiPagination,
-    TuiTab,
-    TuiTabsHorizontal,
-    RouterLink
+    TuiPagination
   ],
   templateUrl: './countries.component.html',
   styleUrl: './countries.component.css'
@@ -28,7 +24,6 @@ export class CountriesComponent {
   protected countries: CountrySummary[] = [];
   protected pageCount: number = 1;
   protected searchBarInput: FormControl<string | null> = new FormControl('');
-  protected readonly navTabsOptions: string[] = ['/countries', '/cities'];
 
   constructor(private service: CountriesService) {
   }

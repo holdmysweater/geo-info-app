@@ -9,15 +9,7 @@ import {
   TuiTextfieldOptionsDirective
 } from '@taiga-ui/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import {
-  TuiChevron,
-  TuiComboBox,
-  TuiDataListWrapperComponent,
-  TuiPagination,
-  TuiTab,
-  TuiTabsHorizontal
-} from '@taiga-ui/kit';
-import { RouterLink } from '@angular/router';
+import { TuiChevron, TuiComboBox, TuiDataListWrapperComponent, TuiPagination } from '@taiga-ui/kit';
 import { CountryData } from '../../../countries/models/country.model';
 
 @Component({
@@ -30,9 +22,6 @@ import { CountryData } from '../../../countries/models/country.model';
     FormsModule,
     ReactiveFormsModule,
     TuiPagination,
-    TuiTab,
-    TuiTabsHorizontal,
-    RouterLink,
     TuiChevron,
     TuiComboBox,
     TuiDataListWrapperComponent,
@@ -47,7 +36,6 @@ export class CitiesComponent {
   protected cities: PopulatedPlaceSummary[] = [];
   protected pageCount: number = 1;
   protected searchBarInput: FormControl<string | null> = new FormControl('');
-  protected readonly navTabsOptions: string[] = ['/countries', '/cities'];
 
   constructor(private service: CitiesService) {
   }
