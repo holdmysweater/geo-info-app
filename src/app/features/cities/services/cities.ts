@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, switchMap, take, tap } from 'rxjs';
 import { CitiesListResponse, PopulatedPlaceSummary } from '../models/city.model';
 import { CitiesApi } from './cities.api';
+import { CountryData, CountryListResponse } from '../../countries/models/country.model';
+import { CountriesApi } from '../../countries/services/countries.api';
 
 @Injectable({
   providedIn: 'root'
@@ -12,8 +14,9 @@ export class Cities {
   private readonly currentOffset$ = new BehaviorSubject<number>(0);
   private readonly pageItemsLimit$ = new BehaviorSubject<number>(5);
   private readonly pageCount$ = new BehaviorSubject<number>(1);
+  private readonly countriesSearchList$ = new BehaviorSubject<CountryData[]>([]);
 
-  constructor(private readonly api: CitiesApi) {
+  constructor(private readonly api: CitiesApi, private readonly countryApi: CountriesApi) {
   }
 
   // region GETTERS
@@ -36,6 +39,10 @@ export class Cities {
 
   public getPageCount$(): Observable<number> {
     return this.pageCount$.asObservable();
+  }
+
+  public getCountriesSearchList$(): Observable<CountryData[]> {
+    return this.countriesSearchList$.asObservable();
   }
 
   // endregion
@@ -76,6 +83,26 @@ export class Cities {
         this.fetchCities(wikiId, namePrefix, languageCode, sort, limit, pageIndex * limit)
       )
     );
+  }
+
+  public fetchCountriesList(
+    namePrefix: string = '',
+    limit: number = 10,
+    languageCode: string = 'en',
+    sort: string = 'name',
+  ) {
+    this.countryApi.getCountries(0, limit, namePrefix, languageCode, sort).pipe(
+      tap((res: CountryListResponse) => {
+        let values = [];
+        for (const data of res.data) {
+          values.push({
+            name: data.name,
+            wikiDataId: data.wikiDataId
+          } as CountryData)
+        }
+        this.countriesSearchList$.next(values);
+      })
+    )
   }
 
   // endregion

@@ -20,3 +20,8 @@ export interface CountryListResponse {
   data: CountrySummary[];
   metadata: CountryListMetadata;
 }
+
+export interface CountryData {
+  name: string;
+  wikiDataId: string;
+}
