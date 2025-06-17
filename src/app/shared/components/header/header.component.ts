@@ -8,9 +8,9 @@ import { LanguageSettings } from '../language-settings/language-settings.compone
     TuiTitle,
     LanguageSettings
   ],
-  templateUrl: './header.html',
-  styleUrl: './header.css'
+  templateUrl: './header.component.html',
+  styleUrl: './header.component.css'
 })
-export class Header {
+export class HeaderComponent {
   protected title = 'ГЕОИНФОРМАЦИЯ';
 }
