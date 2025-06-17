@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Countries } from '../../services/countries';
+import { CountriesService } from '../../services/countries.service';
 import { CountriesTable } from '../../components/countries-table/countries-table';
 import { CountrySummary } from '../../models/country.model';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -30,7 +30,7 @@ export class CountriesList {
   protected searchBarInput: FormControl<string | null> = new FormControl('');
   protected readonly navTabsOptions: string[] = ['/countries', '/cities'];
 
-  constructor(private service: Countries) {
+  constructor(private service: CountriesService) {
   }
 
   private ngOnInit(): void {

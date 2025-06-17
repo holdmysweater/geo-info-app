@@ -1,19 +1,19 @@
 import { Injectable } from '@angular/core';
-import { CountriesApi } from "./countries.api";
+import { CountriesApiService } from "./countries.api.service";
 import { BehaviorSubject, Observable, switchMap, take, tap } from "rxjs";
 import { CountryListResponse, CountrySummary } from "../models/country.model";
 
 @Injectable({
   providedIn: 'root'
 })
-export class Countries {
+export class CountriesService {
   private readonly countries$ = new BehaviorSubject<CountrySummary[]>([]);
   private readonly total$ = new BehaviorSubject<number>(0);
   private readonly currentOffset$ = new BehaviorSubject<number>(0);
   private readonly pageItemsLimit$ = new BehaviorSubject<number>(6);
   private readonly pageCount$ = new BehaviorSubject<number>(1);
 
-  constructor(private readonly api: CountriesApi) {
+  constructor(private readonly api: CountriesApiService) {
   }
 
   // region GETTERS

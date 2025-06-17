@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { CountriesApi } from './countries.api';
+import { CountriesApiService } from './countries.api.service';
 
-describe('CountriesApi', () => {
-  let service: CountriesApi;
+describe('CountriesApiService', () => {
+  let service: CountriesApiService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(CountriesApi);
+    service = TestBed.inject(CountriesApiService);
   });
 
   it('should be created', () => {

@@ -3,7 +3,7 @@ import { BehaviorSubject, Observable, switchMap, take, tap } from 'rxjs';
 import { CitiesListResponse, PopulatedPlaceSummary } from '../models/city.model';
 import { CitiesApi } from './cities.api';
 import { CountryData, CountryListResponse } from '../../countries/models/country.model';
-import { CountriesApi } from '../../countries/services/countries.api';
+import { CountriesApiService } from '../../countries/services/countries.api.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +16,7 @@ export class Cities {
   private readonly pageCount$ = new BehaviorSubject<number>(1);
   private readonly countriesSearchList$ = new BehaviorSubject<CountryData[]>([]);
 
-  constructor(private readonly api: CitiesApi, private readonly countryApi: CountriesApi) {
+  constructor(private readonly api: CitiesApi, private readonly countryApi: CountriesApiService) {
   }
 
   // region GETTERS
