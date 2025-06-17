@@ -10,7 +10,6 @@ import {
 } from '@taiga-ui/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TuiChevron, TuiComboBox, TuiDataListWrapperComponent, TuiPagination } from '@taiga-ui/kit';
-import { CountryData } from '../../../countries/models/country.model';
 
 @Component({
   selector: 'app-cities',
@@ -24,26 +23,37 @@ import { CountryData } from '../../../countries/models/country.model';
     TuiPagination,
     TuiChevron,
     TuiComboBox,
-    TuiDataListWrapperComponent,
-    TuiTextfieldDropdownDirective
+    TuiTextfieldDropdownDirective,
+    TuiDataListWrapperComponent
   ],
   templateUrl: './cities.component.html',
   styleUrl: './cities.component.css'
 })
 export class CitiesComponent {
   protected countryDropdown: FormControl<string | null> = new FormControl('');
-  protected countries: CountryData[] = [];
+  protected countries: Map<string, string> | null = null;
   protected cities: PopulatedPlaceSummary[] = [];
   protected pageCount: number = 1;
   protected searchBarInput: FormControl<string | null> = new FormControl('');
+  protected readonly Array = Array;
 
   constructor(private service: CitiesService) {
   }
 
   private ngOnInit(): void {
-    this.service.getCountriesSearchList$().subscribe(countries =>
-      this.countries = countries
-    )
+    this.countryDropdown.valueChanges.subscribe(value => {
+      console.log("Dropdown selected: " + value);
+
+      if (null === value) return;
+
+      this.cities = [];
+      this.service.fetchCities(this.countries?.get(this.countryDropdown.value ?? '') ?? '', this.searchBarInput.value ?? '').subscribe();
+    });
+
+    this.service.getCountriesSearchList$().subscribe(countries => {
+      this.countries = countries;
+    });
+    this.countries = null;
 
     this.service.getCities$().subscribe(cities => {
       this.cities = [];
@@ -56,8 +66,7 @@ export class CitiesComponent {
       this.pageCount = pageCount;
     });
 
-    this.service.fetchCountriesList(this.countryDropdown.value ?? '', 10).subscribe();
-    this.service.fetchCities(this.searchBarInput.value ?? '').subscribe();
+    this.service.fetchCountriesList('').subscribe();
   }
 
   protected onPageClick(pageIndex: number): void {
@@ -70,10 +79,10 @@ export class CitiesComponent {
     this.service.fetchCities(this.countryDropdown.value ?? '', this.searchBarInput.value ?? '').subscribe();
   }
 
-  protected onDropdownChange() {
-    if (this.countryDropdown.value ?? '' === '') return;
+  protected onDropdownInputChange(input: string) {
+    console.log('cities.ts: new dropdown input = \"' + input + '\"');
 
-    console.log('cities.ts: new dropdown input = \"' + (this.countryDropdown.value ?? '') + '\"');
-    this.service.fetchCities(this.countryDropdown.value ?? '', this.searchBarInput.value ?? '').subscribe();
+    this.countries = null;
+    this.service.fetchCountriesList(input).subscribe();
   }
 }

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, switchMap, take, tap } from 'rxjs';
+import { BehaviorSubject, catchError, map, Observable, of, switchMap, take, tap } from 'rxjs';
 import { CitiesListResponse, PopulatedPlaceSummary } from '../models/city.model';
 import { CitiesApiService } from './cities.api.service';
-import { CountryData, CountryListResponse } from '../../countries/models/country.model';
+import { CountryListResponse } from '../../countries/models/country.model';
 import { CountriesApiService } from '../../countries/services/countries.api.service';
 
 @Injectable({
@@ -14,7 +14,8 @@ export class CitiesService {
   private readonly currentOffset$ = new BehaviorSubject<number>(0);
   private readonly pageItemsLimit$ = new BehaviorSubject<number>(5);
   private readonly pageCount$ = new BehaviorSubject<number>(1);
-  private readonly countriesSearchList$ = new BehaviorSubject<CountryData[]>([]);
+  private readonly countriesSearchList$ = new BehaviorSubject<Map<string, string>>(new Map<string, string>());
+  private countriesSearchCache = new Map<string, Map<string, string>>();
 
   constructor(private readonly api: CitiesApiService, private readonly countryApi: CountriesApiService) {
   }
@@ -41,7 +42,7 @@ export class CitiesService {
     return this.pageCount$.asObservable();
   }
 
-  public getCountriesSearchList$(): Observable<CountryData[]> {
+  public getCountriesSearchList$(): Observable<Map<string, string>> {
     return this.countriesSearchList$.asObservable();
   }
 
@@ -90,20 +91,27 @@ export class CitiesService {
     limit: number = 10,
     languageCode: string = 'en',
     sort: string = 'name',
-  ): Observable<CountryData[]> {
+  ): Observable<Map<string, string>> {
+    if (this.countriesSearchCache.has(namePrefix)) {
+      const cached = this.countriesSearchCache.get(namePrefix) || new Map<string, string>();
+      this.countriesSearchList$.next(cached);
+      return of(cached);
+    }
+
     return this.countryApi.getCountries(0, limit, namePrefix, languageCode, sort).pipe(
-      switchMap((res: CountryListResponse) => {
-        let values = [];
-        for (const data of res.data) {
-          values.push({
-            name: data.name,
-            wikiDataId: data.wikiDataId
-          } as CountryData)
-        }
-        this.countriesSearchList$.next(values)
-        return this.getCountriesSearchList$();
-      })
-    )
+      map((res: CountryListResponse) => {
+        const countriesMap = new Map<string, string>();
+
+        res.data.forEach(data => {
+          countriesMap.set(data.name, data.wikiDataId);
+        });
+
+        this.countriesSearchCache.set(namePrefix, countriesMap);
+        return countriesMap;
+      }),
+      tap(values => this.countriesSearchList$.next(values)),
+      catchError(() => of(new Map<string, string>()))
+    );
   }
 
   // endregion

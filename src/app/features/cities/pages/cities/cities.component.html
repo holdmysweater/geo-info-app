@@ -4,16 +4,18 @@
                  [style.width]="'250px'"
   >
     <input
+      #inputRef
       placeholder="Выберите страну"
       tuiComboBox
       [formControl]="countryDropdown"
-      (change)="onDropdownChange()"
+      (input)="onDropdownInputChange($any($event.target).value)"
     />
 
     <tui-data-list-wrapper
       *tuiTextfieldDropdown
       new
-      [items]="countries"
+      [emptyContent]="null === countries ? 'Идёт поиск...' : 'Ничего не найдено'"
+      [items]="null === countries ? null : Array.from(countries.keys())"
     />
   </tui-textfield>
 
@@ -32,7 +34,7 @@
   </tui-textfield>
 </div>
 
-<app-cities-table [cities]="cities"></app-cities-table>
+<app-cities-table [cities]="null === countryDropdown.value ? [] : cities"></app-cities-table>
 
 <tui-pagination
   [index]="0"

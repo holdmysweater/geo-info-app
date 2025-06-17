@@ -21,7 +21,3 @@ export interface CountryListResponse {
   metadata: CountryListMetadata;
 }
 
-export interface CountryData {
-  name: string;
-  wikiDataId: string;
-}
