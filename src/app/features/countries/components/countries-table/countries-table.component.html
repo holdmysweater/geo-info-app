@@ -32,7 +32,7 @@
   </tr>
   </thead>
   <tbody tuiTbody>
-    @for (country of countries(); track country) {
+    @for (country of countries(); track country.wikiDataId) {
       <tr>
         <td tuiTd
             [style.padding]="0"

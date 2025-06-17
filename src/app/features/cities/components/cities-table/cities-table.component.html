@@ -28,7 +28,7 @@
   </tr>
   </thead>
   <tbody tuiTbody>
-    @for (city of cities(); track city) {
+    @for (city of cities(); track city.id) {
       <tr>
         <td tuiTd
             [style.padding]="0"
