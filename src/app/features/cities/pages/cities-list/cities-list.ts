@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Cities } from '../../services/cities';
+import { CitiesService } from '../../services/cities.service';
 import { PopulatedPlaceSummary } from '../../models/city.model';
 import { CitiesTable } from '../../components/cities-table/cities-table';
 import {
@@ -49,7 +49,7 @@ export class CitiesList {
   protected searchBarInput: FormControl<string | null> = new FormControl('');
   protected readonly navTabsOptions: string[] = ['/countries', '/cities'];
 
-  constructor(private service: Cities) {
+  constructor(private service: CitiesService) {
   }
 
   private ngOnInit(): void {

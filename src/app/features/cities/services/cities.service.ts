@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, switchMap, take, tap } from 'rxjs';
 import { CitiesListResponse, PopulatedPlaceSummary } from '../models/city.model';
-import { CitiesApi } from './cities.api';
+import { CitiesApiService } from './cities.api.service';
 import { CountryData, CountryListResponse } from '../../countries/models/country.model';
 import { CountriesApiService } from '../../countries/services/countries.api.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class Cities {
+export class CitiesService {
   private readonly cities$ = new BehaviorSubject<PopulatedPlaceSummary[]>([]);
   private readonly total$ = new BehaviorSubject<number>(0);
   private readonly currentOffset$ = new BehaviorSubject<number>(0);
@@ -16,7 +16,7 @@ export class Cities {
   private readonly pageCount$ = new BehaviorSubject<number>(1);
   private readonly countriesSearchList$ = new BehaviorSubject<CountryData[]>([]);
 
-  constructor(private readonly api: CitiesApi, private readonly countryApi: CountriesApiService) {
+  constructor(private readonly api: CitiesApiService, private readonly countryApi: CountriesApiService) {
   }
 
   // region GETTERS

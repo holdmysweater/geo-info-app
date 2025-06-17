@@ -6,7 +6,7 @@ import { CitiesListResponse } from '../models/city.model';
 @Injectable({
   providedIn: 'root'
 })
-export class CitiesApi {
+export class CitiesApiService {
   private readonly baseUrl = '/api/geo/cities';
 
   constructor(private readonly http: HttpClient) {
