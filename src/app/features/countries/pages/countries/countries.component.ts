@@ -8,7 +8,7 @@ import { TuiPagination, TuiTab, TuiTabsHorizontal } from '@taiga-ui/kit';
 import { RouterLink } from '@angular/router';
 
 @Component({
-  selector: 'app-countries-list',
+  selector: 'app-countries',
   imports: [
     CountriesTable,
     FormsModule,
@@ -21,10 +21,10 @@ import { RouterLink } from '@angular/router';
     TuiTabsHorizontal,
     RouterLink
   ],
-  templateUrl: './countries-list.html',
-  styleUrl: './countries-list.css'
+  templateUrl: './countries.component.html',
+  styleUrl: './countries.component.css'
 })
-export class CountriesList {
+export class CountriesComponent {
   protected countries: CountrySummary[] = [];
   protected pageCount: number = 1;
   protected searchBarInput: FormControl<string | null> = new FormControl('');
@@ -49,12 +49,12 @@ export class CountriesList {
   }
 
   protected onPageClick(pageIndex: number): void {
-    console.log('countries-list.ts: clicked on page index = ' + pageIndex);
+    console.log('countries.component.ts: clicked on page index = ' + pageIndex);
     this.service.fetchPage(pageIndex, this.searchBarInput.value ?? '').subscribe();
   }
 
   protected onSearchBarInputChange() {
-    console.log('countries-list.ts: new search bar input = \"' + (this.searchBarInput.value ?? '') + '\"');
+    console.log('countries.component.ts: new search bar input = \"' + (this.searchBarInput.value ?? '') + '\"');
     this.service.fetchCountries(this.searchBarInput.value ?? '').subscribe();
   }
 }
