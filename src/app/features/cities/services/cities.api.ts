@@ -7,7 +7,7 @@ import { CitiesListResponse } from '../models/city.model';
   providedIn: 'root'
 })
 export class CitiesApi {
-  private readonly baseUrl = 'http://geodb-free-service.wirefreethought.com';
+  private readonly baseUrl = '/api/geo/cities';
 
   constructor(private readonly http: HttpClient) {
   }
@@ -28,6 +28,6 @@ export class CitiesApi {
       .set('languageCode', languageCode)
       .set('sort', sort);
 
-    return this.http.get<CitiesListResponse>(this.baseUrl + '/v1/geo/cities', { params });
+    return this.http.get<CitiesListResponse>(this.baseUrl, { params });
   }
 }

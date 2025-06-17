@@ -7,7 +7,7 @@ import { CountryListResponse } from "../models/country.model";
   providedIn: 'root'
 })
 export class CountriesApi {
-  private readonly baseUrl = 'http://geodb-free-service.wirefreethought.com';
+  private readonly baseUrl = '/api/geo/countries';
 
   constructor(private readonly http: HttpClient) {
   }
@@ -26,6 +26,6 @@ export class CountriesApi {
       .set('languageCode', languageCode)
       .set('sort', sort);
 
-    return this.http.get<CountryListResponse>(this.baseUrl + '/v1/geo/countries', { params });
+    return this.http.get<CountryListResponse>(this.baseUrl, { params });
   }
 }

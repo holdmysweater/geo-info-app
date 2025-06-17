@@ -1,0 +1,11 @@
+{
+  "/api": {
+    "target": "http://geodb-free-service.wirefreethought.com/v1",
+    "secure": false,
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/api": ""
+    },
+    "logLevel": "debug"
+  }
+}
