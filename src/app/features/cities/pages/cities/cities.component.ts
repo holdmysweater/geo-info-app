@@ -10,6 +10,7 @@ import {
 } from '@taiga-ui/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TuiChevron, TuiComboBox, TuiDataListWrapperComponent, TuiPagination } from '@taiga-ui/kit';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-cities',
@@ -37,7 +38,7 @@ export class CitiesComponent {
   protected searchBarInput: FormControl<string | null> = new FormControl('');
   protected readonly Array = Array;
 
-  constructor(private service: CitiesService) {
+  constructor(private service: CitiesService, private route: ActivatedRoute) {
   }
 
   private ngOnInit(): void {
@@ -65,8 +66,20 @@ export class CitiesComponent {
     this.service.getPageCount$().subscribe(pageCount => {
       this.pageCount = pageCount;
     });
+    this.route.queryParams.subscribe(params => {
+      const wikiId = params['wikiId'];
+      const name = params['name'];
 
-    this.service.fetchCountriesList('').subscribe();
+      if (wikiId != null && name != null) {
+        this.countries = new Map<string, string>();
+        this.countries.set(name, wikiId);
+        this.countryDropdown.setValue(name);
+      }
+    });
+
+    if (null === this.countries) {
+      this.service.fetchCountriesList('').subscribe();
+    }
   }
 
   protected onPageClick(pageIndex: number): void {

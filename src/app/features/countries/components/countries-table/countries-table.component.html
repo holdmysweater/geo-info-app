@@ -42,11 +42,15 @@
         <td tuiTd
             [style.padding]="0"
         >
-          <tui-icon
-            icon="@tui.external-link"
-            [style.color]="'#6a6c7e'"
-            [style.width]="'15px'"
-          />
+          <a>
+            <tui-icon
+              icon="@tui.external-link"
+              [style.color]="'#6a6c7e'"
+              [style.width]="'15px'"
+              [routerLink]="'/cities'"
+              [queryParams]="{ name: country.name, wikiId: country.wikiDataId }"
+            />
+          </a>
         </td>
         <td tuiTd
             [style.padding]="0"
