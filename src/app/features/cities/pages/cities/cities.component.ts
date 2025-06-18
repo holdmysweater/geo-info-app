@@ -30,9 +30,9 @@ import { TuiChevron, TuiComboBox, TuiDataListWrapperComponent, TuiPagination } f
   styleUrl: './cities.component.css'
 })
 export class CitiesComponent {
-  protected countryDropdown: FormControl<string | null> = new FormControl('');
+  protected countryDropdown: FormControl<string | null> = new FormControl(null);
   protected countries: Map<string, string> | null = null;
-  protected cities: PopulatedPlaceSummary[] = [];
+  protected cities: PopulatedPlaceSummary[] | null = [];
   protected pageCount: number = 1;
   protected searchBarInput: FormControl<string | null> = new FormControl('');
   protected readonly Array = Array;
@@ -46,7 +46,7 @@ export class CitiesComponent {
 
       if (null === value) return;
 
-      this.cities = [];
+      this.cities = null;
       this.service.fetchCities(this.countries?.get(this.countryDropdown.value ?? '') ?? '', this.searchBarInput.value ?? '').subscribe();
     });
 
@@ -71,12 +71,15 @@ export class CitiesComponent {
 
   protected onPageClick(pageIndex: number): void {
     console.log('cities.ts: clicked on page index = ' + pageIndex);
-    this.service.fetchPage(this.countryDropdown.value ?? '', pageIndex, this.searchBarInput.value ?? '').subscribe();
+    this.service.fetchPage(this.countries?.get(this.countryDropdown.value ?? '') ?? '', pageIndex, this.searchBarInput.value ?? '').subscribe();
   }
 
   protected onSearchBarInputChange() {
     console.log('cities.ts: new search bar input = \"' + (this.searchBarInput.value ?? '') + '\"');
-    this.service.fetchCities(this.countryDropdown.value ?? '', this.searchBarInput.value ?? '').subscribe();
+
+    if (this.countryDropdown.value == null) return;
+
+    this.service.fetchCities(this.countries?.get(this.countryDropdown.value ?? '') ?? '', this.searchBarInput.value ?? '').subscribe();
   }
 
   protected onDropdownInputChange(input: string) {
