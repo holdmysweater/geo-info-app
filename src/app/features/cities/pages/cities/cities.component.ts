@@ -1,8 +1,8 @@
-import { Component, computed, effect, inject } from '@angular/core';
+import { Component, computed, effect, inject, Signal, signal, WritableSignal } from '@angular/core';
 import { CitiesService } from '../../services/cities.service';
-import { PopulatedPlaceSummary } from '../../models/city.model';
 import { CitiesTableComponent } from '../../components/cities-table/cities-table.component';
 import {
+  TuiLoader,
   TuiTextfieldComponent,
   TuiTextfieldDirective,
   TuiTextfieldDropdownDirective,
@@ -13,6 +13,7 @@ import { TuiChevron, TuiComboBox, TuiDataListWrapperComponent } from '@taiga-ui/
 import { ActivatedRoute } from '@angular/router';
 import { PaginationService } from '../../../../shared/services/pagination.service';
 import { PaginationComponent } from '../../../../shared/components/pagination/pagination.component';
+import { PopulatedPlaceSummary } from '../../models/city.model';
 
 @Component({
   selector: 'app-cities',
@@ -27,11 +28,12 @@ import { PaginationComponent } from '../../../../shared/components/pagination/pa
     TuiComboBox,
     TuiTextfieldDropdownDirective,
     TuiDataListWrapperComponent,
-    PaginationComponent
+    PaginationComponent,
+    TuiLoader
   ],
   templateUrl: './cities.component.html',
   styleUrl: './cities.component.css',
-  providers: [PaginationService]
+  providers: [CitiesService, PaginationService]
 })
 export class CitiesComponent {
   private service = inject(CitiesService);
@@ -39,63 +41,65 @@ export class CitiesComponent {
   private route = inject(ActivatedRoute);
   protected readonly Array = Array;
 
-  protected currentPageIndex = computed(() => this.paginationService.params().currentPage);
-  protected countryDropdown: FormControl<string | null> = new FormControl(null);
-  protected searchBarInput: FormControl<string | null> = new FormControl('');
+  protected isLoading: boolean = false;
+  protected readonly cities: Signal<PopulatedPlaceSummary[]> = this.service.cities;
+  protected readonly countries: Signal<Map<string, string>> = this.service.countriesSearchList;
 
-  protected countries: Map<string, string> | null = null;
-  protected cities: PopulatedPlaceSummary[] | null = [];
+  protected readonly totalPageCount: Signal<number> = this.service.pageCount;
+  protected readonly currentPageIndex: Signal<number> = computed(() =>
+    this.paginationService.params().currentPage
+  );
+
+  protected readonly searchBarInput: WritableSignal<string> = signal('');
+  protected readonly countryDropdownInput: WritableSignal<string | null> = signal(null);
+
+  protected readonly countryDropdownFormControl: FormControl<string | null> = new FormControl(null);
+  protected readonly countryDropdownValue: WritableSignal<string | null> = signal(null);
+  protected readonly countryWikiId = computed(() =>
+    this.countries()?.get(this.countryDropdownValue() ?? '') ?? ''
+  );
 
   constructor() {
+    // Update cities list
     effect(() => {
-      this.service.fetchPage(this.getWikiId(), this.currentPageIndex(), this.getSearchBarInput()).subscribe();
+      this.isLoading = true;
+      this.service.fetchPage(this.countryWikiId(), this.currentPageIndex(), this.searchBarInput()).subscribe();
+    });
+
+    // Reset loading flag after cities update
+    effect(() => {
+      this.cities();
+      this.isLoading = false;
+    });
+
+    // Update countries list
+    effect(() => {
+      this.service.fetchCountriesList(this.countryDropdownInput() ?? '').subscribe();
+    });
+
+    // Update total page count for pagination component
+    effect(() => {
+      this.paginationService.updateTotalPages(this.totalPageCount());
     });
   }
 
   private ngOnInit(): void {
     this.subscribeToDropdownValueChanges();
-    this.subscribeToCountriesSearchListChanges();
-    this.subscribeToCitiesChanges();
-    this.subscribeToPageCountChanges();
     this.handleQueryParameters();
-
-    if (null === this.countries) {
-      this.service.fetchCountriesList('').subscribe();
-    }
   }
-
-  // region
-
-  private getWikiId() {
-    return this.countries?.get(this.countryDropdown.value ?? '') ?? '';
-  }
-
-  private getSearchBarInput() {
-    return this.searchBarInput.value ?? '';
-  }
-
-  private fetchCities() {
-    this.cities = null;
-    this.service.fetchCities(this.getWikiId(), this.getSearchBarInput()).subscribe();
-  }
-
-  // endregion
 
   // region EVENT HANDLERS
 
-  protected onSearchBarInputChange() {
-    console.log('cities.ts: new search bar input = \"' + this.getSearchBarInput() + '\"');
+  protected onSearchBarInputChange(text: string) {
+    console.log('cities.ts: new search bar input = \"' + text + '\"');
 
-    if (this.countryDropdown.value == null) return;
-
-    this.fetchCities();
+    this.searchBarInput.set(text);
   }
 
-  protected onDropdownInputChange(input: string) {
-    console.log('cities.ts: new dropdown input = \"' + input + '\"');
+  protected onDropdownInputChange(text: string) {
+    console.log('cities.ts: new dropdown input = \"' + text + '\"');
 
-    this.countries = null;
-    this.service.fetchCountriesList(input).subscribe();
+    this.countryDropdownInput.set(text);
   }
 
   // endregion
@@ -103,48 +107,15 @@ export class CitiesComponent {
   // region SUBSCRIPTIONS
 
   private subscribeToDropdownValueChanges() {
-    this.countryDropdown.valueChanges.subscribe(value => {
+    this.countryDropdownFormControl.valueChanges.subscribe(value => {
       console.log("Dropdown selected: " + value);
 
-      if (null === value) return;
-
-      this.fetchCities();
-    });
-  }
-
-  private subscribeToCountriesSearchListChanges() {
-    this.service.getCountriesSearchList$().subscribe(countries => {
-      this.countries = countries;
-    });
-    this.countries = null;
-  }
-
-  private subscribeToCitiesChanges() {
-    this.service.getCities$().subscribe(cities => {
-      this.cities = [];
-      for (const city of cities) {
-        this.cities.push(city);
-      }
-    });
-  }
-
-  private subscribeToPageCountChanges() {
-    this.service.getPageCount$().subscribe(pageCount => {
-      this.paginationService.updateTotalPages(pageCount);
+      this.countryDropdownValue.set(this.countryDropdownFormControl.value);
     });
   }
 
   private handleQueryParameters() {
-    this.route.queryParams.subscribe(params => {
-      const wikiId = params['wikiId'];
-      const name = params['name'];
-
-      if (wikiId != null && name != null) {
-        this.countries = new Map<string, string>();
-        this.countries.set(name, wikiId);
-        this.countryDropdown.setValue(name);
-      }
-    });
+    // TODO
   }
 
   // endregion

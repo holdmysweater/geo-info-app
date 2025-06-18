@@ -4,10 +4,9 @@
                  [style.width]="'250px'"
   >
     <input
-      #inputRef
       placeholder="Введите страну..."
       tuiComboBox
-      [formControl]="countryDropdown"
+      [formControl]="countryDropdownFormControl"
       (input)="onDropdownInputChange($any($event.target).value)"
     />
 
@@ -15,7 +14,7 @@
       *tuiTextfieldDropdown
       new
       [emptyContent]="null === countries ? 'Идёт поиск...' : 'Ничего не найдено'"
-      [items]="null === countries ? null : Array.from(countries.keys())"
+      [items]="null === countries ? null : Array.from(countries().keys())"
     />
   </tui-textfield>
 
@@ -28,18 +27,22 @@
     <input
       tuiTextfield
       [placeholder]="s.focused() ? '' : 'Поиск'"
-      [formControl]="searchBarInput"
-      (change)="onSearchBarInputChange()"
+      (change)="onSearchBarInputChange($any($event.target).value)"
     />
   </tui-textfield>
 </div>
 
-@if (null !== countryDropdown.value) {
-  @if (null !== cities && 0 === cities.length) {
-    <p [style.align-self]="'center'">Информации о городах данной страны нет</p>
+@if (null !== countryDropdownValue()) {
+  @if (isLoading) {
+    <tui-loader/>
   } @else {
-    <app-cities-table [cities]="cities!"/>
-    <app-pagination/>
+    @if ('' !== this.searchBarInput()) {
+      <p [style.align-self]="'center'">Города с заданными параметрами не найдены</p>
+    } @else if (0 === cities().length) {
+      <p [style.align-self]="'center'">Информации о городах данной страны нет</p>
+    } @else {
+      <app-cities-table [cities]="cities!()"/>
+    }
   }
+  <app-pagination/>
 }
-
