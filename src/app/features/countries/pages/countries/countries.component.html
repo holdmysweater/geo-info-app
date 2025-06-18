@@ -12,13 +12,7 @@
   />
 </tui-textfield>
 
-<app-countries-table [countries]="countries"></app-countries-table>
+<app-countries-table [countries]="countries"/>
 
-<tui-pagination
-  [index]="0"
-  [length]="pageCount"
-  (indexChange)="onPageClick($event)"
-  [style.margin-top]="'15px'"
-  [style.align-self]="'start'"
-/>
+<app-pagination/>
 
