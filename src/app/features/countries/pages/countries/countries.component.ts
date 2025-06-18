@@ -1,11 +1,11 @@
-import { Component, computed, effect, inject } from '@angular/core';
+import { Component, computed, effect, inject, Signal, signal, WritableSignal } from '@angular/core';
 import { CountriesService } from '../../services/countries.service';
 import { CountriesTableComponent } from '../../components/countries-table/countries-table.component';
-import { CountrySummary } from '../../models/country.model';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { TuiTextfieldComponent, TuiTextfieldDirective, TuiTextfieldOptionsDirective } from '@taiga-ui/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { TuiLoader, TuiTextfieldComponent, TuiTextfieldDirective, TuiTextfieldOptionsDirective } from '@taiga-ui/core';
 import { PaginationService } from '../../../../shared/services/pagination.service';
 import { PaginationComponent } from '../../../../shared/components/pagination/pagination.component';
+import { CountrySummary } from '../../models/country.model';
 
 @Component({
   selector: 'app-countries',
@@ -16,43 +16,47 @@ import { PaginationComponent } from '../../../../shared/components/pagination/pa
     TuiTextfieldDirective,
     TuiTextfieldOptionsDirective,
     ReactiveFormsModule,
-    PaginationComponent
+    PaginationComponent,
+    TuiLoader
   ],
   templateUrl: './countries.component.html',
   styleUrl: './countries.component.css',
-  providers: [PaginationService]
+  providers: [CountriesService, PaginationService]
 })
 export class CountriesComponent {
+  private readonly service: CountriesService = inject(CountriesService);
   private readonly paginationService: PaginationService = inject(PaginationService);
 
-  protected currentPageIndex = computed(() => this.paginationService.params().currentPage);
-  protected countries: CountrySummary[] = [];
-  protected searchBarInput: FormControl<string | null> = new FormControl('');
+  protected isLoading: boolean = true;
+  protected readonly countries: Signal<CountrySummary[]> = this.service.countries;
 
-  constructor(private service: CountriesService) {
+  protected readonly totalPageCount: Signal<number> = this.service.pageCount;
+  protected readonly currentPageIndex: Signal<number> = computed(() =>
+    this.paginationService.params().currentPage
+  );
+
+  protected readonly searchBarInput: WritableSignal<string> = signal('');
+
+  constructor() {
+    // Update countries list
     effect(() => {
-      this.service.fetchPage(this.currentPageIndex(), this.searchBarInput.value ?? '').subscribe();
-      console.log("effect");
+      this.isLoading = true;
+      this.service.fetchPage(this.currentPageIndex(), this.searchBarInput() ?? '').subscribe();
+    });
+
+    effect(() => {
+      this.countries();
+      this.isLoading = false;
+    });
+
+    // Update total page count for pagination component
+    effect(() => {
+      this.paginationService.updateTotalPages(this.totalPageCount());
     });
   }
 
-  private ngOnInit(): void {
-    this.service.getCountries$().subscribe(countries => {
-      this.countries = [];
-      for (const country of countries) {
-        this.countries.push(country);
-      }
-    });
-
-    this.service.getPageCount$().subscribe(pageCount => {
-      this.paginationService.updateTotalPages(pageCount);
-    });
-
-    this.service.fetchCountries(this.searchBarInput.value ?? '').subscribe();
-  }
-
-  protected onSearchBarInputChange() {
-    console.log('countries.component.ts: new search bar input = \"' + (this.searchBarInput.value ?? '') + '\"');
-    this.service.fetchCountries(this.searchBarInput.value ?? '').subscribe();
+  protected onSearchBarInputChange(text: string) {
+    console.log('countries.component.ts: new search bar input = \"' + (text ?? '') + '\"');
+    this.searchBarInput.set(text);
   }
 }

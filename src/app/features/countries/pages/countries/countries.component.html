@@ -7,12 +7,18 @@
   <input
     tuiTextfield
     [placeholder]="s.focused() ? '' : 'Поиск'"
-    [formControl]="searchBarInput"
-    (change)="onSearchBarInputChange()"
+    (change)="onSearchBarInputChange($any($event.target).value)"
   />
 </tui-textfield>
 
-<app-countries-table [countries]="countries"/>
-
+@if (isLoading) {
+  <tui-loader/>
+} @else if (countries().length > 0) {
+  <app-countries-table [countries]="countries()"/>
+} @else if (0 === countries().length && '' !== this.searchBarInput()) {
+  <p [style.align-self]="'center'">Страны с заданными параметрами не найдены</p>
+} @else {
+  <tui-loader/>
+}
 <app-pagination/>
 
