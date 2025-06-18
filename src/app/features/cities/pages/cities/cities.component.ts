@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, effect, inject } from '@angular/core';
 import { CitiesService } from '../../services/cities.service';
 import { PopulatedPlaceSummary } from '../../models/city.model';
 import { CitiesTableComponent } from '../../components/cities-table/cities-table.component';
@@ -9,8 +9,10 @@ import {
   TuiTextfieldOptionsDirective
 } from '@taiga-ui/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { TuiChevron, TuiComboBox, TuiDataListWrapperComponent, TuiPagination } from '@taiga-ui/kit';
+import { TuiChevron, TuiComboBox, TuiDataListWrapperComponent } from '@taiga-ui/kit';
 import { ActivatedRoute } from '@angular/router';
+import { PaginationService } from '../../../../shared/services/pagination.service';
+import { PaginationComponent } from '../../../../shared/components/pagination/pagination.component';
 
 @Component({
   selector: 'app-cities',
@@ -21,26 +23,34 @@ import { ActivatedRoute } from '@angular/router';
     TuiTextfieldDirective,
     FormsModule,
     ReactiveFormsModule,
-    TuiPagination,
     TuiChevron,
     TuiComboBox,
     TuiTextfieldDropdownDirective,
-    TuiDataListWrapperComponent
+    TuiDataListWrapperComponent,
+    PaginationComponent
   ],
   templateUrl: './cities.component.html',
-  styleUrl: './cities.component.css'
+  styleUrl: './cities.component.css',
+  providers: [PaginationService]
 })
 export class CitiesComponent {
   private service = inject(CitiesService);
+  private paginationService = inject(PaginationService);
   private route = inject(ActivatedRoute);
   protected readonly Array = Array;
 
+  protected currentPageIndex = computed(() => this.paginationService.params().currentPage);
   protected countryDropdown: FormControl<string | null> = new FormControl(null);
   protected searchBarInput: FormControl<string | null> = new FormControl('');
 
   protected countries: Map<string, string> | null = null;
   protected cities: PopulatedPlaceSummary[] | null = [];
-  protected pageCount: number = 1;
+
+  constructor() {
+    effect(() => {
+      this.service.fetchPage(this.getWikiId(), this.currentPageIndex(), this.getSearchBarInput()).subscribe();
+    });
+  }
 
   private ngOnInit(): void {
     this.subscribeToDropdownValueChanges();
@@ -72,12 +82,6 @@ export class CitiesComponent {
   // endregion
 
   // region EVENT HANDLERS
-
-  protected onPageClick(pageIndex: number): void {
-    console.log('cities.ts: clicked on page index = ' + pageIndex);
-
-    this.service.fetchPage(this.getWikiId(), pageIndex, this.getSearchBarInput()).subscribe();
-  }
 
   protected onSearchBarInputChange() {
     console.log('cities.ts: new search bar input = \"' + this.getSearchBarInput() + '\"');
@@ -126,7 +130,7 @@ export class CitiesComponent {
 
   private subscribeToPageCountChanges() {
     this.service.getPageCount$().subscribe(pageCount => {
-      this.pageCount = pageCount;
+      this.paginationService.updateTotalPages(pageCount);
     });
   }
 
