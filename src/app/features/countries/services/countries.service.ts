@@ -1,42 +1,27 @@
-import { Injectable } from '@angular/core';
+import { computed, inject, Injectable, Signal, signal, WritableSignal } from '@angular/core';
 import { CountriesApiService } from "./countries.api.service";
-import { BehaviorSubject, Observable, switchMap, take, tap } from "rxjs";
 import { CountryListResponse, CountrySummary } from "../models/country.model";
+import { Observable, tap } from "rxjs";
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class CountriesService {
-  private readonly countries$ = new BehaviorSubject<CountrySummary[]>([]);
-  private readonly total$ = new BehaviorSubject<number>(0);
-  private readonly currentOffset$ = new BehaviorSubject<number>(0);
-  private readonly pageItemsLimit$ = new BehaviorSubject<number>(6);
-  private readonly pageCount$ = new BehaviorSubject<number>(1);
+  private readonly api: CountriesApiService = inject(CountriesApiService);
 
-  constructor(private readonly api: CountriesApiService) {
-  }
+  private readonly _countries: WritableSignal<CountrySummary[]> = signal<CountrySummary[]>([]);
+  private readonly _total: WritableSignal<number> = signal<number>(0);
+  private readonly _currentOffset: WritableSignal<number> = signal<number>(0);
+  private readonly _pageItemsLimit: WritableSignal<number> = signal<number>(6);
 
   // region GETTERS
 
-  public getCountries$(): Observable<CountrySummary[]> {
-    return this.countries$.asObservable();
-  }
+  public readonly countries: Signal<CountrySummary[]> = this._countries.asReadonly();
+  public readonly total: Signal<number> = this._total.asReadonly();
+  public readonly currentOffset: Signal<number> = this._currentOffset.asReadonly();
+  public readonly pageItemsLimit: Signal<number> = this._pageItemsLimit.asReadonly();
 
-  public getTotal$(): Observable<number> {
-    return this.total$.asObservable();
-  }
-
-  public getCurrentOffset$(): Observable<number> {
-    return this.currentOffset$.asObservable();
-  }
-
-  public getPageItemsLimit$(): Observable<number> {
-    return this.pageItemsLimit$.asObservable();
-  }
-
-  public getPageCount$(): Observable<number> {
-    return this.pageCount$.asObservable();
-  }
+  public readonly pageCount = computed(() =>
+    Math.ceil(this._total() / this._pageItemsLimit())
+  );
 
   // endregion
 
@@ -49,14 +34,16 @@ export class CountriesService {
     pageItemsLimit?: number,
     offset: number = 0
   ): Observable<CountryListResponse> {
-    if (pageItemsLimit) this.setPageItemsLimit(pageItemsLimit);
-    return this.pageItemsLimit$.pipe(
-      take(1),
-      switchMap(limit =>
-        this.api.getCountries(offset, limit, namePrefix, languageCode, sort).pipe(
-          tap((res: CountryListResponse) => this.processCountryListResponse(res, offset))
-        )
-      )
+    if (pageItemsLimit) this._pageItemsLimit.set(pageItemsLimit);
+
+    return this.api.getCountries(
+      offset,
+      this._pageItemsLimit(),
+      namePrefix,
+      languageCode,
+      sort
+    ).pipe(
+      tap((res: CountryListResponse) => this.processCountryListResponse(res, offset))
     );
   }
 
@@ -67,13 +54,9 @@ export class CountriesService {
     sort: string = 'name',
     pageItemsLimit?: number
   ): Observable<CountryListResponse> {
-    if (pageItemsLimit) this.setPageItemsLimit(pageItemsLimit);
-    return this.pageItemsLimit$.pipe(
-      take(1),
-      switchMap(limit =>
-        this.fetchCountries(namePrefix, languageCode, sort, limit, pageIndex * limit)
-      )
-    );
+    if (pageItemsLimit) this._pageItemsLimit.set(pageItemsLimit);
+    const offset = pageIndex * this._pageItemsLimit();
+    return this.fetchCountries(namePrefix, languageCode, sort, undefined, offset);
   }
 
   // endregion
@@ -81,22 +64,9 @@ export class CountriesService {
   // region HELPERS
 
   private processCountryListResponse(res: CountryListResponse, offset: number): void {
-    this.countries$.next(res.data);
-    this.total$.next(res.metadata.totalCount);
-    this.currentOffset$.next(offset);
-    this.setPageCount(res.metadata.totalCount);
-  }
-
-  private setPageItemsLimit(limit: number): void {
-    this.pageItemsLimit$.next(limit);
-  }
-
-  private setPageCount(total: number): void {
-    this.pageItemsLimit$.pipe(
-      take(1)
-    ).subscribe(limit =>
-      this.pageCount$.next(Math.ceil(total / limit))
-    );
+    this._countries.set(res.data);
+    this._total.set(res.metadata.totalCount);
+    this._currentOffset.set(offset);
   }
 
   // endregion
