@@ -1,52 +1,32 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, catchError, map, Observable, of, switchMap, take, tap } from 'rxjs';
+import { computed, inject, Injectable, Signal, signal, WritableSignal } from '@angular/core';
+import { catchError, map, Observable, of, tap } from 'rxjs';
 import { CitiesListResponse, PopulatedPlaceSummary } from '../models/city.model';
-import { CitiesApiService } from './cities.api.service';
 import { CountryListResponse } from '../../countries/models/country.model';
+import { CitiesApiService } from './cities.api.service';
 import { CountriesApiService } from '../../countries/services/countries.api.service';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class CitiesService {
-  private readonly cities$ = new BehaviorSubject<PopulatedPlaceSummary[]>([]);
-  private readonly total$ = new BehaviorSubject<number>(0);
-  private readonly currentOffset$ = new BehaviorSubject<number>(0);
-  private readonly pageItemsLimit$ = new BehaviorSubject<number>(5);
-  private readonly pageCount$ = new BehaviorSubject<number>(1);
-  private readonly countriesSearchList$ = new BehaviorSubject<Map<string, string>>(new Map<string, string>());
-  private countriesSearchCache = new Map<string, Map<string, string>>();
+  private readonly api: CitiesApiService = inject(CitiesApiService);
+  private readonly countryApi: CountriesApiService = inject(CountriesApiService);
 
-  constructor(private readonly api: CitiesApiService, private readonly countryApi: CountriesApiService) {
-  }
+  private readonly _cities: WritableSignal<PopulatedPlaceSummary[]> = signal<PopulatedPlaceSummary[]>([]);
+  private readonly _total: WritableSignal<number> = signal<number>(0);
+  private readonly _currentOffset: WritableSignal<number> = signal<number>(0);
+  private readonly _pageItemsLimit: WritableSignal<number> = signal<number>(5);
+  private readonly _countriesSearchList: WritableSignal<Map<string, string>> = signal<Map<string, string>>(new Map());
 
-  // region GETTERS
+  public readonly cities: Signal<PopulatedPlaceSummary[]> = this._cities.asReadonly();
+  public readonly total: Signal<number> = this._total.asReadonly();
+  public readonly currentOffset: Signal<number> = this._currentOffset.asReadonly();
+  public readonly pageItemsLimit: Signal<number> = this._pageItemsLimit.asReadonly();
+  public readonly countriesSearchList: Signal<Map<string, string>> = this._countriesSearchList.asReadonly();
 
-  public getCities$(): Observable<PopulatedPlaceSummary[]> {
-    return this.cities$.asObservable();
-  }
+  public readonly pageCount: Signal<number> = computed(() =>
+    Math.ceil(this.total() / this.pageItemsLimit())
+  );
 
-  public getTotal$(): Observable<number> {
-    return this.total$.asObservable();
-  }
-
-  public getCurrentOffset$(): Observable<number> {
-    return this.currentOffset$.asObservable();
-  }
-
-  public getPageItemsLimit$(): Observable<number> {
-    return this.pageItemsLimit$.asObservable();
-  }
-
-  public getPageCount$(): Observable<number> {
-    return this.pageCount$.asObservable();
-  }
-
-  public getCountriesSearchList$(): Observable<Map<string, string>> {
-    return this.countriesSearchList$.asObservable();
-  }
-
-  // endregion
+  private readonly countriesSearchCache = new Map<string, Map<string, string>>();
 
   // region FETCH
 
@@ -58,14 +38,17 @@ export class CitiesService {
     pageItemsLimit?: number,
     offset: number = 0
   ): Observable<CitiesListResponse> {
-    if (pageItemsLimit) this.setPageItemsLimit(pageItemsLimit);
-    return this.pageItemsLimit$.pipe(
-      take(1),
-      switchMap(limit =>
-        this.api.getCities(wikiId, offset, limit, namePrefix, languageCode, sort).pipe(
-          tap((res: CitiesListResponse) => this.processCityListResponse(res, offset))
-        )
-      )
+    if (pageItemsLimit) this._pageItemsLimit.set(pageItemsLimit);
+
+    return this.api.getCities(
+      wikiId,
+      offset,
+      this._pageItemsLimit(),
+      namePrefix,
+      languageCode,
+      sort
+    ).pipe(
+      tap((res: CitiesListResponse) => this.processCityListResponse(res, offset))
     );
   }
 
@@ -77,16 +60,12 @@ export class CitiesService {
     sort: string = 'name',
     pageItemsLimit?: number
   ): Observable<CitiesListResponse> {
-    if (pageItemsLimit) this.setPageItemsLimit(pageItemsLimit);
-    return this.pageItemsLimit$.pipe(
-      take(1),
-      switchMap(limit =>
-        this.fetchCities(wikiId, namePrefix, languageCode, sort, limit, pageIndex * limit)
-      )
-    );
+    if (pageItemsLimit) this._pageItemsLimit.set(pageItemsLimit);
+    const offset = pageIndex * this._pageItemsLimit();
+    return this.fetchCities(wikiId, namePrefix, languageCode, sort, undefined, offset);
   }
 
-  public fetchCountriesList(
+  public fetchCountriesList( // TODO use countries service instead and use computable
     namePrefix: string = '',
     limit: number = 10,
     languageCode: string = 'en',
@@ -94,22 +73,18 @@ export class CitiesService {
   ): Observable<Map<string, string>> {
     if (this.countriesSearchCache.has(namePrefix)) {
       const cached = this.countriesSearchCache.get(namePrefix) || new Map<string, string>();
-      this.countriesSearchList$.next(cached);
+      this._countriesSearchList.set(cached);
       return of(cached);
     }
 
     return this.countryApi.getCountries(0, limit, namePrefix, languageCode, sort).pipe(
       map((res: CountryListResponse) => {
         const countriesMap = new Map<string, string>();
-
-        res.data.forEach(data => {
-          countriesMap.set(data.name, data.wikiDataId);
-        });
-
+        res.data.forEach(data => countriesMap.set(data.name, data.wikiDataId));
         this.countriesSearchCache.set(namePrefix, countriesMap);
         return countriesMap;
       }),
-      tap(values => this.countriesSearchList$.next(values)),
+      tap(values => this._countriesSearchList.set(values)),
       catchError(() => of(new Map<string, string>()))
     );
   }
@@ -119,22 +94,9 @@ export class CitiesService {
   // region HELPERS
 
   private processCityListResponse(res: CitiesListResponse, offset: number): void {
-    this.cities$.next(res.data);
-    this.total$.next(res.metadata.totalCount);
-    this.currentOffset$.next(offset);
-    this.setPageCount(res.metadata.totalCount);
-  }
-
-  private setPageItemsLimit(limit: number): void {
-    this.pageItemsLimit$.next(limit);
-  }
-
-  private setPageCount(total: number): void {
-    this.pageItemsLimit$.pipe(
-      take(1)
-    ).subscribe(limit =>
-      this.pageCount$.next(Math.ceil(total / limit))
-    );
+    this._cities.set(res.data);
+    this._total.set(res.metadata.totalCount);
+    this._currentOffset.set(offset);
   }
 
   // endregion
