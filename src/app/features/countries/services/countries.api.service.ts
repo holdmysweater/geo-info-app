@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from "rxjs";
 import { CountryListResponse } from "../models/country.model";
@@ -7,10 +7,9 @@ import { CountryListResponse } from "../models/country.model";
   providedIn: 'root'
 })
 export class CountriesApiService {
-  private readonly baseUrl = '/api/geo/countries';
+  private readonly http: HttpClient = inject(HttpClient);
 
-  constructor(private readonly http: HttpClient) {
-  }
+  private readonly baseUrl = '/api/geo/countries';
 
   public getCountries(
     offset: number,
