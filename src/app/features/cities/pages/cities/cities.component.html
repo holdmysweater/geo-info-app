@@ -1,48 +1,50 @@
-<div>
-  <tui-textfield tuiChevron
-                 tuiTextfieldSize="s"
-                 [style.width]="'250px'"
-  >
-    <input
-      placeholder="Введите страну..."
-      tuiComboBox
-      [formControl]="countryDropdownFormControl"
-      (input)="onDropdownInputChange($any($event.target).value)"
-    />
+<ng-container *transloco="let t">
+  <div>
+    <tui-textfield tuiChevron
+                   tuiTextfieldSize="s"
+                   [style.width]="'250px'"
+    >
+      <input
+        placeholder="{{ t('search.countries.placeholder') }}"
+        tuiComboBox
+        [formControl]="countryDropdownFormControl"
+        (input)="onDropdownInputChange($any($event.target).value)"
+      />
 
-    <tui-data-list-wrapper
-      *tuiTextfieldDropdown
-      new
-      [emptyContent]="null === countries ? 'Идёт поиск...' : 'Ничего не найдено'"
-      [items]="null === countries ? null : Array.from(countries().keys())"
-    />
-  </tui-textfield>
+      <tui-data-list-wrapper
+        *tuiTextfieldDropdown
+        new
+        [emptyContent]="null === countries ? t('search.in-progress') : t('search.no-results')"
+        [items]="null === countries ? null : Array.from(countries().keys())"
+      />
+    </tui-textfield>
 
-  <tui-textfield
-    #s
-    iconStart="@tui.search"
-    tuiTextfieldSize="s"
-    [style.width]="'225px'"
-  >
-    <input
-      tuiTextfield
-      [placeholder]="s.focused() ? '' : 'Поиск'"
-      (change)="onSearchBarInputChange($any($event.target).value)"
-    />
-  </tui-textfield>
-</div>
+    <tui-textfield
+      #s
+      iconStart="@tui.search"
+      tuiTextfieldSize="s"
+      [style.width]="'225px'"
+    >
+      <input
+        tuiTextfield
+        [placeholder]="s.focused() ? '' : t('search.placeholder')"
+        (change)="onSearchBarInputChange($any($event.target).value)"
+      />
+    </tui-textfield>
+  </div>
 
-@if (null !== countryDropdownValue()) {
-  @if (isLoading) {
-    <tui-loader/>
-  } @else {
-    @if ('' !== this.searchBarInput()) {
-      <p [style.align-self]="'center'">Города с заданными параметрами не найдены</p>
-    } @else if (0 === cities().length) {
-      <p [style.align-self]="'center'">Информации о городах данной страны нет</p>
+  @if (null !== countryDropdownValue()) {
+    @if (isLoading) {
+      <tui-loader/>
     } @else {
-      <app-cities-table [cities]="cities!()"/>
+      @if ('' !== this.searchBarInput()) {
+        <p [style.align-self]="'center'">{{ t('search.cities.not-found') }}</p>
+      } @else if (0 === cities().length) {
+        <p [style.align-self]="'center'">{{ t('search.cities.no-info') }}</p>
+      } @else {
+        <app-cities-table [cities]="cities!()"/>
+      }
     }
+    <app-pagination/>
   }
-  <app-pagination/>
-}
+</ng-container>

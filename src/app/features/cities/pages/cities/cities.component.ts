@@ -15,6 +15,7 @@ import { PaginationService } from '../../../../shared/services/pagination.servic
 import { PaginationComponent } from '../../../../shared/components/pagination/pagination.component';
 import { PopulatedPlaceSummary } from '../../models/city.model';
 import { InternationalizationService } from '../../../../shared/services/internationalization.service';
+import { TranslocoDirective } from '@jsverse/transloco';
 
 @Component({
   selector: 'app-cities',
@@ -30,7 +31,8 @@ import { InternationalizationService } from '../../../../shared/services/interna
     TuiTextfieldDropdownDirective,
     TuiDataListWrapperComponent,
     PaginationComponent,
-    TuiLoader
+    TuiLoader,
+    TranslocoDirective
   ],
   templateUrl: './cities.component.html',
   styleUrl: './cities.component.css',

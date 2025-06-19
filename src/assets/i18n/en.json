@@ -8,8 +8,15 @@
   },
   "search": {
     "placeholder": "Search",
+    "in-progress": "Searching...",
+    "no-results": "Nothing found",
     "countries": {
-      "not-found": "No countries matching the specified parameters were found"
+      "not-found": "No countries matching the specified parameters were found",
+      "placeholder": "Type a country..."
+    },
+    "cities": {
+      "not-found": "No cities matching the specified parameters were found",
+      "no-info": "No information available for the cities of this country"
     }
   },
   "countries-table": {
