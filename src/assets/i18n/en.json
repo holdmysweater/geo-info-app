@@ -17,5 +17,11 @@
     "name": "Name",
     "code": "Country code",
     "currencies": "Currency codes"
+  },
+  "cities-table": {
+    "country": "Country",
+    "name": "Name",
+    "region": "Region",
+    "population": "Population"
   }
 }
