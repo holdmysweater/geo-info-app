@@ -1,4 +1,7 @@
 {
+  "header": {
+    "title": "ГЕОИНФОРМАЦИЯ"
+  },
   "navigation": {
     "countries": "Страны",
     "cities": "Города"

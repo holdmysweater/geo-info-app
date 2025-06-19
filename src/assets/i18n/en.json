@@ -1,4 +1,7 @@
 {
+  "header": {
+    "title": "GEOINFORMATION"
+  },
   "navigation": {
     "countries": "Countries",
     "cities": "Cities"
