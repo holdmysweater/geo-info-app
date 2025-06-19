@@ -6,6 +6,12 @@
     "countries": "Countries",
     "cities": "Cities"
   },
+  "search": {
+    "placeholder": "Search",
+    "countries": {
+      "not-found": "No countries matching the specified parameters were found"
+    }
+  },
   "countries-table": {
     "id": "Country ID",
     "name": "Name",

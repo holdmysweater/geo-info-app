@@ -1,24 +1,25 @@
-<tui-textfield
-  #s
-  iconStart="@tui.search"
-  tuiTextfieldSize="s"
-  [style.width]="'225px'"
->
-  <input
-    tuiTextfield
-    [placeholder]="s.focused() ? '' : 'Поиск'"
-    (change)="onSearchBarInputChange($any($event.target).value)"
-  />
-</tui-textfield>
+<ng-container *transloco="let t">
+  <tui-textfield
+    #s
+    iconStart="@tui.search"
+    tuiTextfieldSize="s"
+    [style.width]="'225px'"
+  >
+    <input
+      tuiTextfield
+      [placeholder]="s.focused() ? '' : t('search.placeholder')"
+      (change)="onSearchBarInputChange($any($event.target).value)"
+    />
+  </tui-textfield>
 
-@if (isLoading) {
-  <tui-loader/>
-} @else if (countries().length > 0) {
-  <app-countries-table [countries]="countries()"/>
-} @else if (0 === countries().length && '' !== this.searchBarInput()) {
-  <p [style.align-self]="'center'">Страны с заданными параметрами не найдены</p>
-} @else {
-  <tui-loader/>
-}
-<app-pagination/>
-
+  @if (isLoading) {
+    <tui-loader/>
+  } @else if (countries().length > 0) {
+    <app-countries-table [countries]="countries()"/>
+  } @else if (0 === countries().length && '' !== this.searchBarInput()) {
+    <p [style.align-self]="'center'">{{ t('search.countries.not-found') }}</p>
+  } @else {
+    <tui-loader/>
+  }
+  <app-pagination/>
+</ng-container>

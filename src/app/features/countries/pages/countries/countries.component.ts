@@ -7,6 +7,7 @@ import { PaginationService } from '../../../../shared/services/pagination.servic
 import { PaginationComponent } from '../../../../shared/components/pagination/pagination.component';
 import { CountrySummary } from '../../models/country.model';
 import { InternationalizationService } from '../../../../shared/services/internationalization.service';
+import { TranslocoDirective } from '@jsverse/transloco';
 
 @Component({
   selector: 'app-countries',
@@ -18,7 +19,8 @@ import { InternationalizationService } from '../../../../shared/services/interna
     TuiTextfieldOptionsDirective,
     ReactiveFormsModule,
     PaginationComponent,
-    TuiLoader
+    TuiLoader,
+    TranslocoDirective
   ],
   templateUrl: './countries.component.html',
   styleUrl: './countries.component.css',

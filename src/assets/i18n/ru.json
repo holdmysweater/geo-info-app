@@ -6,6 +6,12 @@
     "countries": "Страны",
     "cities": "Города"
   },
+  "search": {
+    "placeholder": "Поиск",
+    "countries": {
+      "not-found": "Страны с заданными параметрами не найдены"
+    }
+  },
   "countries-table": {
     "id": "ID страны",
     "name": "Наименование",
