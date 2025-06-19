@@ -6,6 +6,7 @@ import { TuiLoader, TuiTextfieldComponent, TuiTextfieldDirective, TuiTextfieldOp
 import { PaginationService } from '../../../../shared/services/pagination.service';
 import { PaginationComponent } from '../../../../shared/components/pagination/pagination.component';
 import { CountrySummary } from '../../models/country.model';
+import { InternationalizationService } from '../../../../shared/services/internationalization.service';
 
 @Component({
   selector: 'app-countries',
@@ -26,6 +27,7 @@ import { CountrySummary } from '../../models/country.model';
 export class CountriesComponent {
   private readonly service: CountriesService = inject(CountriesService);
   private readonly paginationService: PaginationService = inject(PaginationService);
+  private readonly internationalizationService: InternationalizationService = inject(InternationalizationService);
 
   protected isLoading: boolean = true;
   protected readonly countries: Signal<CountrySummary[]> = this.service.countries;
@@ -41,7 +43,11 @@ export class CountriesComponent {
     // Update countries list
     effect(() => {
       this.isLoading = true;
-      this.service.fetchPage(this.currentPageIndex(), this.searchBarInput() ?? '').subscribe();
+      this.service.fetchPage(
+        this.currentPageIndex(),
+        this.searchBarInput(),
+        this.internationalizationService.language()
+      ).subscribe();
     });
 
     effect(() => {
