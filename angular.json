@@ -52,6 +52,11 @@
                 "glob": "**/*",
                 "input": "node_modules/@taiga-ui/icons/src",
                 "output": "assets/taiga-ui/icons"
+              },
+              {
+                "glob": "**/*",
+                "input": "src/assets/i18n",
+                "output": "/assets/i18n/"
               }
             ],
             "styles": [
@@ -92,6 +97,7 @@
             },
             "development": {
               "buildTarget": "geo-info-app:build:development"
+              "buildTarget": "geo-info-app:build:development"
             }
           },
           "defaultConfiguration": "development",
@@ -114,6 +120,11 @@
               {
                 "glob": "**/*",
                 "input": "public"
+              },
+              {
+                "glob": "**/*",
+                "input": "src/assets/i18n",
+                "output": "/assets/i18n/"
               }
             ],
             "styles": [
