@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { CountrySummary } from '../../models/country.model';
 import { TuiIcon } from '@taiga-ui/core';
 import { RouterLink } from '@angular/router';
+import { TranslocoDirective } from '@jsverse/transloco';
 
 @Component({
   selector: 'app-countries-table',
@@ -14,7 +15,8 @@ import { RouterLink } from '@angular/router';
     FormsModule,
     TuiTableTd,
     TuiIcon,
-    RouterLink
+    RouterLink,
+    TranslocoDirective
   ],
   templateUrl: './countries-table.component.html',
   styleUrl: './countries-table.component.css'

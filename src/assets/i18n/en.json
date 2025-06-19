@@ -5,5 +5,11 @@
   "navigation": {
     "countries": "Countries",
     "cities": "Cities"
+  },
+  "countries-table": {
+    "id": "Country ID",
+    "name": "Name",
+    "code": "Country code",
+    "currencies": "Currency codes"
   }
 }
