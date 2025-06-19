@@ -3,6 +3,6 @@
   [items]="options"
   [style.flex-direction]="'row'"
   [style.width]="'max-content'"
-  [(ngModel)]="language"
+  [formControl]="languageFormControl"
   (change)="onValueChanged()"
 />
