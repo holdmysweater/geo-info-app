@@ -3,9 +3,9 @@ import { PaginationParams } from '../models/pagination.model';
 
 @Injectable()
 export class PaginationService {
-  private _params: WritableSignal<PaginationParams> = signal({ currentPage: 0, totalPages: 0 });
+  private readonly _params: WritableSignal<PaginationParams> = signal({ currentPage: 0, totalPages: 0 });
 
-  public params: Signal<PaginationParams> = this._params.asReadonly();
+  public readonly params: Signal<PaginationParams> = this._params.asReadonly();
 
   public updateCurrentPage(pageNumber: number): void {
     this._params.update(current => ({ ...current, currentPage: pageNumber }));
