@@ -34,17 +34,7 @@
   </div>
 
   @if (null !== countryDropdownValue()) {
-    @if (isLoading) {
-      <tui-loader/>
-    } @else {
-      @if ('' !== this.searchBarInput()) {
-        <p [style.align-self]="'center'">{{ t('search.cities.not-found') }}</p>
-      } @else if (0 === cities().length) {
-        <p [style.align-self]="'center'">{{ t('search.cities.no-info') }}</p>
-      } @else {
-        <app-cities-table [cities]="cities!()"/>
-      }
-    }
+    <app-cities-table [searchParameters]="this.searchBarInput()" [countryWikiIdParameter]="this.countryWikiId()"/>
     <app-pagination/>
   }
 </ng-container>

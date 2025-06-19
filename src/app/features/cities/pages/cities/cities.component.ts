@@ -31,7 +31,6 @@ import { TranslocoDirective } from '@jsverse/transloco';
     TuiTextfieldDropdownDirective,
     TuiDataListWrapperComponent,
     PaginationComponent,
-    TuiLoader,
     TranslocoDirective
   ],
   templateUrl: './cities.component.html',
@@ -40,19 +39,10 @@ import { TranslocoDirective } from '@jsverse/transloco';
 })
 export class CitiesComponent {
   private readonly service = inject(CitiesService);
-  private readonly paginationService = inject(PaginationService);
-  private readonly internationalizationService: InternationalizationService = inject(InternationalizationService);
-  private readonly route = inject(ActivatedRoute);
+
   protected readonly Array = Array;
 
-  protected isLoading: boolean = false;
-  protected readonly cities: Signal<PopulatedPlaceSummary[]> = this.service.cities;
   protected readonly countries: Signal<Map<string, string>> = this.service.countriesSearchList;
-
-  protected readonly totalPageCount: Signal<number> = this.service.pageCount;
-  protected readonly currentPageIndex: Signal<number> = computed(() =>
-    this.paginationService.params().currentPage
-  );
 
   protected readonly searchBarInput: WritableSignal<string> = signal('');
   protected readonly countryDropdownInput: WritableSignal<string | null> = signal(null);
@@ -64,38 +54,14 @@ export class CitiesComponent {
   );
 
   constructor() {
-    // Update cities list
-    effect(() => {
-      this.isLoading = true;
-
-      this.service.fetchPage(
-        this.countryWikiId(),
-        this.currentPageIndex(),
-        this.searchBarInput(),
-        this.internationalizationService.language()
-      ).subscribe();
-    });
-
-    // Reset loading flag after cities update
-    effect(() => {
-      this.cities();
-      this.isLoading = false;
-    });
-
     // Update countries list
     effect(() => {
       this.service.fetchCountriesList(this.countryDropdownInput() ?? '').subscribe();
-    });
-
-    // Update total page count for pagination component
-    effect(() => {
-      this.paginationService.updateTotalPages(this.totalPageCount());
     });
   }
 
   private ngOnInit(): void {
     this.subscribeToDropdownValueChanges();
-    this.handleQueryParameters();
   }
 
   // region EVENT HANDLERS
@@ -122,10 +88,6 @@ export class CitiesComponent {
 
       this.countryDropdownValue.set(this.countryDropdownFormControl.value);
     });
-  }
-
-  private handleQueryParameters() {
-    // TODO
   }
 
   // endregion

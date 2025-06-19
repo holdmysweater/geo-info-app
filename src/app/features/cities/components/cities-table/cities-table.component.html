@@ -1,58 +1,68 @@
 <ng-container *transloco="let t">
-  <table
-    tuiTable
-    [size]="'m'"
-    [style.width.rem]="58"
-  >
-    <thead>
-    <tr>
-      <th tuiTh
-          [style.width]="'120px'"
-          [style.padding-left]="0"
-      >{{ t('cities-table.country') }}
-      </th>
-      <th tuiTh
-          [style.width]="'150px'"
-          [style.padding-left]="0"
-      >{{ t('cities-table.name') }}
-      </th>
-      <th tuiTh
-          [style.width]="'100px'"
-          [style.padding-left]="0"
-      >{{ t('cities-table.region') }}
-      </th>
-      <th tuiTh
-          [style.width]="'100px'"
-          [style.padding-left]="0"
-      >{{ t('cities-table.population') }}
-      </th>
-    </tr>
-    </thead>
-    <tbody tuiTbody>
-      @for (city of cities(); track city.id) {
+  @if (isLoading) {
+    <tui-loader/>
+  } @else {
+    @if (0 === cities().length && '' !== this.searchParameters()) {
+      <p [style.align-self]="'center'">{{ t('search.cities.not-found') }}</p>
+    } @else if (0 === cities().length) {
+      <p [style.align-self]="'center'">{{ t('search.cities.no-info') }}</p>
+    } @else {
+      <table
+        tuiTable
+        [size]="'m'"
+        [style.width.rem]="58"
+      >
+        <thead>
         <tr>
-          <td tuiTd
-              [style.padding]="0"
-          >
-            {{ city.country }}
-          </td>
-          <td tuiTd
-              [style.padding]="0"
-          >
-            {{ city.name }}
-          </td>
-          <td tuiTd
-              [style.padding]="0"
-          >
-            {{ city.region }}
-          </td>
-          <td tuiTd
-              [style.padding]="0"
-          >
-            {{ city.population }}
-          </td>
+          <th tuiTh
+              [style.width]="'120px'"
+              [style.padding-left]="0"
+          >{{ t('cities-table.country') }}
+          </th>
+          <th tuiTh
+              [style.width]="'150px'"
+              [style.padding-left]="0"
+          >{{ t('cities-table.name') }}
+          </th>
+          <th tuiTh
+              [style.width]="'100px'"
+              [style.padding-left]="0"
+          >{{ t('cities-table.region') }}
+          </th>
+          <th tuiTh
+              [style.width]="'100px'"
+              [style.padding-left]="0"
+          >{{ t('cities-table.population') }}
+          </th>
         </tr>
-      }
-    </tbody>
-  </table>
+        </thead>
+        <tbody tuiTbody>
+          @for (city of cities(); track city.id) {
+            <tr>
+              <td tuiTd
+                  [style.padding]="0"
+              >
+                {{ city.country }}
+              </td>
+              <td tuiTd
+                  [style.padding]="0"
+              >
+                {{ city.name }}
+              </td>
+              <td tuiTd
+                  [style.padding]="0"
+              >
+                {{ city.region }}
+              </td>
+              <td tuiTd
+                  [style.padding]="0"
+              >
+                {{ city.population }}
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  }
 </ng-container>
