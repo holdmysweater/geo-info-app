@@ -14,6 +14,7 @@ import { ActivatedRoute } from '@angular/router';
 import { PaginationService } from '../../../../shared/services/pagination.service';
 import { PaginationComponent } from '../../../../shared/components/pagination/pagination.component';
 import { PopulatedPlaceSummary } from '../../models/city.model';
+import { InternationalizationService } from '../../../../shared/services/internationalization.service';
 
 @Component({
   selector: 'app-cities',
@@ -36,9 +37,10 @@ import { PopulatedPlaceSummary } from '../../models/city.model';
   providers: [CitiesService, PaginationService]
 })
 export class CitiesComponent {
-  private service = inject(CitiesService);
-  private paginationService = inject(PaginationService);
-  private route = inject(ActivatedRoute);
+  private readonly service = inject(CitiesService);
+  private readonly paginationService = inject(PaginationService);
+  private readonly internationalizationService: InternationalizationService = inject(InternationalizationService);
+  private readonly route = inject(ActivatedRoute);
   protected readonly Array = Array;
 
   protected isLoading: boolean = false;
@@ -63,7 +65,13 @@ export class CitiesComponent {
     // Update cities list
     effect(() => {
       this.isLoading = true;
-      this.service.fetchPage(this.countryWikiId(), this.currentPageIndex(), this.searchBarInput()).subscribe();
+
+      this.service.fetchPage(
+        this.countryWikiId(),
+        this.currentPageIndex(),
+        this.searchBarInput(),
+        this.internationalizationService.language()
+      ).subscribe();
     });
 
     // Reset loading flag after cities update
