@@ -1,75 +1,83 @@
 <ng-container *transloco="let t">
-  <table
-    tuiTable
-    [size]="'m'"
-    [style.width.rem]="58"
-  >
-    <thead>
-    <tr>
-      <th tuiTh
-          [style.width]="'120px'"
-          [style.padding-left]="0"
-      >{{ t('countries-table.id') }}
-      </th>
-      <th tuiTh
-          [style.width]="'60px'"
-          [style.padding-left]="0"
-      ></th>
-      <th tuiTh
-          [style.width]="'150px'"
-          [style.padding-left]="0"
-      >{{ t('countries-table.name') }}
-      </th>
-      <th tuiTh
-          [style.width]="'100px'"
-          [style.padding-left]="0"
-      >{{ t('countries-table.code') }}
-      </th>
-      <th tuiTh
-          [style.width]="'100px'"
-          [style.padding-left]="0"
-      >{{ t('countries-table.currencies') }}
-      </th>
-    </tr>
-    </thead>
-    <tbody tuiTbody>
-      @for (country of countries(); track country.wikiDataId) {
-        <tr>
-          <td tuiTd
-              [style.padding]="0"
-          >
-            {{ country.wikiDataId }}
-          </td>
-          <td tuiTd
-              [style.padding]="0"
-          >
-            <a>
-              <tui-icon
-                icon="@tui.external-link"
-                [style.color]="'#6a6c7e'"
-                [style.width]="'15px'"
-                [routerLink]="'/cities'"
-                [queryParams]="{ name: country.name, wikiId: country.wikiDataId }"
-              />
-            </a>
-          </td>
-          <td tuiTd
-              [style.padding]="0"
-          >
-            {{ country.name }}
-          </td>
-          <td tuiTd
-              [style.padding]="0"
-          >
-            {{ country.code }}
-          </td>
-          <td tuiTd
-              [style.padding]="0"
-          >
-            {{ country.currencyCodes.join(', ') }}
-          </td>
-        </tr>
-      }
-    </tbody>
-  </table>
+  @if (isLoading) {
+    <tui-loader/>
+  } @else if (countries().length > 0) {
+    <table
+      tuiTable
+      [size]="'m'"
+      [style.width.rem]="58"
+    >
+      <thead>
+      <tr>
+        <th tuiTh
+            [style.width]="'120px'"
+            [style.padding-left]="0"
+        >{{ t('countries-table.id') }}
+        </th>
+        <th tuiTh
+            [style.width]="'60px'"
+            [style.padding-left]="0"
+        ></th>
+        <th tuiTh
+            [style.width]="'150px'"
+            [style.padding-left]="0"
+        >{{ t('countries-table.name') }}
+        </th>
+        <th tuiTh
+            [style.width]="'100px'"
+            [style.padding-left]="0"
+        >{{ t('countries-table.code') }}
+        </th>
+        <th tuiTh
+            [style.width]="'100px'"
+            [style.padding-left]="0"
+        >{{ t('countries-table.currencies') }}
+        </th>
+      </tr>
+      </thead>
+      <tbody tuiTbody>
+        @for (country of countries(); track country.wikiDataId) {
+          <tr>
+            <td tuiTd
+                [style.padding]="0"
+            >
+              {{ country.wikiDataId }}
+            </td>
+            <td tuiTd
+                [style.padding]="0"
+            >
+              <a>
+                <tui-icon
+                  icon="@tui.external-link"
+                  [style.color]="'#6a6c7e'"
+                  [style.width]="'15px'"
+                  [routerLink]="'/cities'"
+                  [queryParams]="{ name: country.name, wikiId: country.wikiDataId }"
+                />
+              </a>
+            </td>
+            <td tuiTd
+                [style.padding]="0"
+            >
+              {{ country.name }}
+            </td>
+            <td tuiTd
+                [style.padding]="0"
+            >
+              {{ country.code }}
+            </td>
+            <td tuiTd
+                [style.padding]="0"
+            >
+              {{ country.currencyCodes.join(', ') }}
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  } @else if (0 === countries().length && '' !== this.searchParameters()) {
+    <p [style.align-self]="'center'">{{ t('search.countries.not-found') }}</p>
+  } @else {
+    <tui-loader/>
+  }
 </ng-container>
