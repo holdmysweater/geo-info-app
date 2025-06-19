@@ -1,1 +1,6 @@
-{}
+{
+  "navigation": {
+    "countries": "Страны",
+    "cities": "Города"
+  }
+}

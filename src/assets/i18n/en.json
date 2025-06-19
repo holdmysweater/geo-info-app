@@ -1,1 +1,6 @@
-{}
+{
+  "navigation": {
+    "countries": "Countries",
+    "cities": "Cities"
+  }
+}
