@@ -16,6 +16,7 @@ import { PaginationComponent } from '../../../../shared/components/pagination/pa
 import { PopulatedPlaceSummary } from '../../models/city.model';
 import { InternationalizationService } from '../../../../shared/services/internationalization.service';
 import { TranslocoDirective } from '@jsverse/transloco';
+import { CountriesService } from '../../../countries/services/countries.service';
 
 @Component({
   selector: 'app-cities',
@@ -35,14 +36,14 @@ import { TranslocoDirective } from '@jsverse/transloco';
   ],
   templateUrl: './cities.component.html',
   styleUrl: './cities.component.css',
-  providers: [CitiesService, PaginationService]
+  providers: [CitiesService, CountriesService, PaginationService]
 })
 export class CitiesComponent {
-  private readonly service = inject(CitiesService);
+  private readonly citiesService: CitiesService = inject(CitiesService);
+  private readonly countriesService: CountriesService = inject(CountriesService);
+  private readonly internationalizationService: InternationalizationService = inject(InternationalizationService);
 
   protected readonly Array = Array;
-
-  protected readonly countries: Signal<Map<string, string>> = this.service.countriesSearchList;
 
   protected readonly searchBarInput: WritableSignal<string> = signal('');
   protected readonly countryDropdownInput: WritableSignal<string | null> = signal(null);
@@ -56,13 +57,32 @@ export class CitiesComponent {
   constructor() {
     // Update countries list
     effect(() => {
-      this.service.fetchCountriesList(this.countryDropdownInput() ?? '').subscribe();
+      this.countriesService.fetchCountries(
+        this.countryDropdownInput() ?? '',
+        this.internationalizationService.language(),
+        'name',
+        10
+      ).subscribe();
     });
   }
 
   private ngOnInit(): void {
     this.subscribeToDropdownValueChanges();
   }
+
+  protected readonly countries: Signal<Map<string, string>> = computed(() => {
+    const currentCountries = this.countriesService.countries();
+    const countriesMap = new Map<string, string>();
+
+    currentCountries.forEach(country => {
+      countriesMap.set(country.name, country.wikiDataId);
+      if (this.countryWikiId() === country.wikiDataId) {
+        this.countryDropdownFormControl.setValue(country.name);
+      }
+    });
+
+    return countriesMap;
+  });
 
   // region EVENT HANDLERS
 

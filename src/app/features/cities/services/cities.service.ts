@@ -14,19 +14,15 @@ export class CitiesService {
   private readonly _total: WritableSignal<number> = signal<number>(0);
   private readonly _currentOffset: WritableSignal<number> = signal<number>(0);
   private readonly _pageItemsLimit: WritableSignal<number> = signal<number>(5);
-  private readonly _countriesSearchList: WritableSignal<Map<string, string>> = signal<Map<string, string>>(new Map());
 
   public readonly cities: Signal<PopulatedPlaceSummary[]> = this._cities.asReadonly();
   public readonly total: Signal<number> = this._total.asReadonly();
   public readonly currentOffset: Signal<number> = this._currentOffset.asReadonly();
   public readonly pageItemsLimit: Signal<number> = this._pageItemsLimit.asReadonly();
-  public readonly countriesSearchList: Signal<Map<string, string>> = this._countriesSearchList.asReadonly();
 
   public readonly pageCount: Signal<number> = computed(() =>
     Math.ceil(this.total() / this.pageItemsLimit())
   );
-
-  private readonly countriesSearchCache = new Map<string, Map<string, string>>();
 
   // region FETCH
 
@@ -63,30 +59,6 @@ export class CitiesService {
     if (pageItemsLimit) this._pageItemsLimit.set(pageItemsLimit);
     const offset = pageIndex * this._pageItemsLimit();
     return this.fetchCities(wikiId, namePrefix, languageCode, sort, undefined, offset);
-  }
-
-  public fetchCountriesList( // TODO use countries service instead and use computable
-    namePrefix: string = '',
-    limit: number = 10,
-    languageCode: string = 'en',
-    sort: string = 'name',
-  ): Observable<Map<string, string>> {
-    if (this.countriesSearchCache.has(namePrefix)) {
-      const cached = this.countriesSearchCache.get(namePrefix) || new Map<string, string>();
-      this._countriesSearchList.set(cached);
-      return of(cached);
-    }
-
-    return this.countryApi.getCountries(0, limit, namePrefix, languageCode, sort).pipe(
-      map((res: CountryListResponse) => {
-        const countriesMap = new Map<string, string>();
-        res.data.forEach(data => countriesMap.set(data.name, data.wikiDataId));
-        this.countriesSearchCache.set(namePrefix, countriesMap);
-        return countriesMap;
-      }),
-      tap(values => this._countriesSearchList.set(values)),
-      catchError(() => of(new Map<string, string>()))
-    );
   }
 
   // endregion
