@@ -7,7 +7,7 @@
       <input
         placeholder="{{ t('search.countries.placeholder') }}"
         tuiComboBox
-        [formControl]="countryDropdownFormControl"
+        [formControl]="countryDropdownDisplayValue"
         (input)="onDropdownInputChange($any($event.target).value)"
       />
 
@@ -33,8 +33,10 @@
     </tui-textfield>
   </div>
 
-  @if (null !== countryDropdownValue()) {
-    <app-cities-table [searchParameters]="this.searchBarInput()" [countryWikiIdParameter]="this.countryWikiId()"/>
+  @if ('' !== this.countryWikiId()) {
+    <app-cities-table [searchParameters]="this.searchBarInput()"
+                      [countryWikiIdParameter]="this.countryWikiId()"
+    />
     <app-pagination/>
   }
 </ng-container>

@@ -1,7 +1,7 @@
 import { computed, inject, Injectable, Signal, signal, WritableSignal } from '@angular/core';
 import { CountriesApiService } from "./countries.api.service";
-import { CountryListResponse, CountrySummary } from "../models/country.model";
-import { Observable, tap } from "rxjs";
+import { CountryDetails, CountryListResponse, CountrySummary } from "../models/country.model";
+import { map, Observable, tap } from "rxjs";
 
 @Injectable()
 export class CountriesService {
@@ -29,9 +29,9 @@ export class CountriesService {
 
   public fetchCountries(
     namePrefix: string = '',
+    pageItemsLimit?: number,
     languageCode: string = 'en',
     sort: string = 'name',
-    pageItemsLimit?: number,
     offset: number = 0
   ): Observable<CountryListResponse> {
     if (pageItemsLimit) this._pageItemsLimit.set(pageItemsLimit);
@@ -56,7 +56,16 @@ export class CountriesService {
   ): Observable<CountryListResponse> {
     if (pageItemsLimit) this._pageItemsLimit.set(pageItemsLimit);
     const offset = pageIndex * this._pageItemsLimit();
-    return this.fetchCountries(namePrefix, languageCode, sort, undefined, offset);
+    return this.fetchCountries(namePrefix, undefined, languageCode, sort, offset);
+  }
+
+  public fetchCountryDetails(
+    countryId: string,
+    languageCode: string
+  ): Observable<CountryDetails> {
+    return this.api.getCountryDetails(countryId, languageCode).pipe(
+      map(response => response.data)
+    );
   }
 
   // endregion

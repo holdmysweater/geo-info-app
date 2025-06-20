@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, input, InputSignal, Signal } from '@angular/core';
+import { Component, effect, inject, input, InputSignal, Signal } from '@angular/core';
 import { TuiTableDirective, TuiTableTbody, TuiTableTd, TuiTableTh } from '@taiga-ui/addon-table';
 import { PopulatedPlaceSummary } from '../../models/city.model';
 import { TranslocoDirective } from '@jsverse/transloco';
