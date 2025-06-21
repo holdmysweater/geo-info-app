@@ -8,10 +8,10 @@
     <input
       tuiTextfield
       [placeholder]="s.focused() ? '' : t('search.placeholder')"
-      (change)="onSearchBarInputChange($any($event.target).value)"
+      [formControl]="this.searchFormControl"
     />
   </tui-textfield>
 
-  <app-countries-table [searchParameters]="this.searchBarInput()"/>
+  <app-countries-table [searchParameters]="this.searchFormControl.value ?? ''"/>
   <app-pagination/>
 </ng-container>

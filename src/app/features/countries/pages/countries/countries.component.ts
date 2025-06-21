@@ -1,11 +1,12 @@
-import { Component, signal, WritableSignal } from '@angular/core';
+import { Component, effect, inject, input, InputSignal } from '@angular/core';
 import { CountriesService } from '../../services/countries.service';
 import { CountriesTableComponent } from '../../components/countries-table/countries-table.component';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TuiTextfieldComponent, TuiTextfieldDirective, TuiTextfieldOptionsDirective } from '@taiga-ui/core';
 import { PaginationService } from '../../../../shared/services/pagination.service';
 import { PaginationComponent } from '../../../../shared/components/pagination/pagination.component';
 import { TranslocoDirective } from '@jsverse/transloco';
+import { QueryParametersService } from '../../../../shared/services/query-parameters.service';
 
 @Component({
   selector: 'app-countries',
@@ -24,10 +25,28 @@ import { TranslocoDirective } from '@jsverse/transloco';
   providers: [CountriesService, PaginationService]
 })
 export class CountriesComponent {
-  protected readonly searchBarInput: WritableSignal<string> = signal('');
+  private readonly queryParamsService: QueryParametersService = inject(QueryParametersService);
 
-  protected onSearchBarInputChange(text: string) {
-    console.log('countries.component.ts: new search bar input = \"' + (text ?? '') + '\"');
-    this.searchBarInput.set(text);
+  protected searchParam: InputSignal<string> = input('', { alias: 'search' });
+
+  protected readonly searchFormControl: FormControl<string | null> = new FormControl('');
+
+  constructor() {
+    // Set search input from query params
+    effect(() => {
+      if ('' === this.searchParam()) return;
+      this.searchFormControl.setValue(this.searchParam(), { emitEvent: false });
+      this.queryParamsService.update({
+        search: this.searchParam(),
+      }).then();
+    });
+
+    // Update query params to match search input
+    this.searchFormControl.valueChanges.subscribe(value => {
+      this.queryParamsService.update({
+        search: value,
+        page: 1
+      }).then();
+    });
   }
 }
