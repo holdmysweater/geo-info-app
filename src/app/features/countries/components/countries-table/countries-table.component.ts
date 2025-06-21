@@ -40,7 +40,7 @@ export class CountriesTableComponent {
     effect(() => {
       this.isLoading = true;
       this.countriesService.fetchPage(
-        this.paginationService.params().currentPage,
+        this.paginationService.currentPage(),
         this.searchParameters(),
         this.internationalizationService.language()
       ).subscribe();

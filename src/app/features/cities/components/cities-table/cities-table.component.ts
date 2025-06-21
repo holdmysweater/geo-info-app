@@ -38,7 +38,7 @@ export class CitiesTableComponent {
 
       this.citiesService.fetchPage(
         this.countryWikiIdParameter() ?? '',
-        this.paginationService.params().currentPage,
+        this.paginationService.currentPage(),
         this.searchParameters(),
         this.internationalizationService.language()
       ).subscribe();
