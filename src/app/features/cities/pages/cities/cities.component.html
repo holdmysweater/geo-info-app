@@ -28,13 +28,13 @@
       <input
         tuiTextfield
         [placeholder]="s.focused() ? '' : t('search.placeholder')"
-        (change)="onSearchBarInputChange($any($event.target).value)"
+        [formControl]="this.searchFormControl"
       />
     </tui-textfield>
   </div>
 
   @if ('' !== this.countryWikiId()) {
-    <app-cities-table [searchParameters]="this.searchBarInput()"
+    <app-cities-table [searchParameters]="this.searchFormControl.value ?? ''"
                       [countryWikiIdParameter]="this.countryWikiId()"
     />
     <app-pagination/>

@@ -1,4 +1,15 @@
-import { Component, computed, effect, inject, Signal, signal, untracked, WritableSignal } from '@angular/core';
+import {
+  Component,
+  computed,
+  effect,
+  inject,
+  input,
+  InputSignal,
+  Signal,
+  signal,
+  untracked,
+  WritableSignal
+} from '@angular/core';
 import { CitiesService } from '../../services/cities.service';
 import { CitiesTableComponent } from '../../components/cities-table/cities-table.component';
 import {
@@ -14,6 +25,7 @@ import { PaginationComponent } from '../../../../shared/components/pagination/pa
 import { InternationalizationService } from '../../../../shared/services/internationalization.service';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { CountriesService } from '../../../countries/services/countries.service';
+import { QueryParametersService } from '../../../../shared/services/query-parameters.service';
 
 @Component({
   selector: 'app-cities',
@@ -37,11 +49,14 @@ import { CountriesService } from '../../../countries/services/countries.service'
 })
 export class CitiesComponent {
   private readonly countriesService: CountriesService = inject(CountriesService);
+  private readonly queryParamsService: QueryParametersService = inject(QueryParametersService);
   private readonly internationalizationService: InternationalizationService = inject(InternationalizationService);
 
   protected readonly Array = Array;
 
-  protected readonly searchBarInput: WritableSignal<string> = signal('');
+  protected searchParam: InputSignal<string> = input('', { alias: 'search' });
+  protected readonly searchFormControl: FormControl<string | null> = new FormControl('');
+
   protected readonly countryDropdownSearchInput: WritableSignal<string | null> = signal(null);
 
   protected readonly countryDropdownDisplayValue: FormControl<string | null> = new FormControl(null);
@@ -70,6 +85,23 @@ export class CitiesComponent {
         this.countryDropdownDisplayValue.setValue(value.name, { emitEvent: false });
       });
     });
+
+    // Set search input from query params
+    effect(() => {
+      if ('' === this.searchParam()) return;
+      this.searchFormControl.setValue(this.searchParam(), { emitEvent: false });
+      this.queryParamsService.update({
+        search: this.searchParam(),
+      }).then();
+    });
+
+    // Update query params to match search input
+    this.searchFormControl.valueChanges.subscribe(value => {
+      this.queryParamsService.update({
+        search: value,
+        page: 1
+      }).then();
+    });
   }
 
   private ngOnInit(): void {
@@ -88,12 +120,6 @@ export class CitiesComponent {
   });
 
   // region EVENT HANDLERS
-
-  protected onSearchBarInputChange(text: string) {
-    console.log('cities.ts: new search bar input = \"' + text + '\"');
-
-    this.searchBarInput.set(text);
-  }
 
   protected onDropdownInputChange(text: string) {
     console.log('cities.ts: new dropdown input = \"' + text + '\"');
