@@ -54,7 +54,7 @@ export class CountriesTableComponent {
 
     // Update total page count
     effect(() => {
-      this.paginationService.updateTotalPages(this.countriesService.pageCount());
+      this.paginationService.setTotalPages(this.countriesService.pageCount());
     });
   }
 }

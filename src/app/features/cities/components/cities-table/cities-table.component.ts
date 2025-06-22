@@ -51,7 +51,7 @@ export class CitiesTableComponent {
 
     // Update total page count for pagination component
     effect(() => {
-      this.paginationService.updateTotalPages(this.citiesService.pageCount());
+      this.paginationService.setTotalPages(this.citiesService.pageCount());
     });
   }
 }

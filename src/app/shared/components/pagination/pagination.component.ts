@@ -1,4 +1,4 @@
-import { Component, effect, inject, Signal } from '@angular/core';
+import { Component, effect, inject } from '@angular/core';
 import { TuiPagination } from '@taiga-ui/kit';
 import { PaginationService } from '../../services/pagination.service';
 import { QueryParametersService } from '../../services/query-parameters.service';
@@ -12,27 +12,20 @@ import { QueryParametersService } from '../../services/query-parameters.service'
   styleUrl: './pagination.component.css'
 })
 export class PaginationComponent {
-  private readonly paginationService: PaginationService = inject(PaginationService);
-  private readonly queryParamsService: QueryParametersService = inject(QueryParametersService);
-
-  protected readonly currentPage: Signal<number> = this.paginationService.currentPage;
-  protected readonly totalPages: Signal<number> = this.paginationService.totalPages;
+  protected readonly paginationService: PaginationService = inject(PaginationService);
+  private readonly queryService: QueryParametersService = inject(QueryParametersService);
 
   constructor() {
-    // Set current page from query params
-    this.queryParamsService.watchParam('page').subscribe(value => {
-      this.paginationService.updateCurrentPage(Number(value) - 1);
+    // Update page - URL to Service
+    this.queryService.watchParam('page').subscribe(value => {
+      this.paginationService.setCurrentPage(Number(value) - 1);
     });
 
-    // Update query params to match pagination page
+    // Update page - Service to URL
     effect(() => {
-      this.queryParamsService.update({
-        page: this.currentPage() + 1
+      this.queryService.update({
+        page: this.paginationService.currentPage() + 1
       }).then();
     });
-  }
-
-  protected onClick(pageIndex: number): void {
-    this.paginationService.updateCurrentPage(pageIndex);
   }
 }
