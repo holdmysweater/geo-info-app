@@ -1,5 +1,4 @@
 import { Component, computed, effect, inject, input, InputSignal, Signal, signal, WritableSignal } from '@angular/core';
-import { CitiesService } from '../../services/cities.service';
 import { CitiesTableComponent } from '../../components/cities-table/cities-table.component';
 import {
   TuiTextfieldComponent,
@@ -34,13 +33,12 @@ import { QueryParametersService } from '../../../../shared/services/query-parame
   ],
   templateUrl: './cities.component.html',
   styleUrl: './cities.component.css',
-  providers: [CitiesService, CountriesService, PaginationService]
+  providers: [CountriesService, PaginationService]
 })
 export class CitiesComponent {
   private readonly countriesService: CountriesService = inject(CountriesService);
-  private readonly queryParamsService: QueryParametersService = inject(QueryParametersService);
-  private readonly internationalizationService: InternationalizationService = inject(InternationalizationService);
-
+  private readonly queryService: QueryParametersService = inject(QueryParametersService);
+  private readonly langService: InternationalizationService = inject(InternationalizationService);
   protected readonly Array = Array;
 
   protected searchParam: InputSignal<string> = input('', { alias: 'search' });
@@ -52,85 +50,80 @@ export class CitiesComponent {
   protected readonly countryDropdownSearchInput: WritableSignal<string | null> = signal(null);
   protected readonly countryDropdownDisplayValue: FormControl<string | null> = new FormControl(null);
 
-  protected readonly countries: Signal<Map<string, string>> = computed(() => {
-    const currentCountries = this.countriesService.countries();
-    const countriesMap = new Map<string, string>();
-
-    currentCountries.forEach(country => {
-      countriesMap.set(country.name, country.wikiDataId);
-    });
-
-    return countriesMap;
-  });
-
   constructor() {
     // Update countries list
     effect(() => {
       this.countriesService.fetchCountries(
         this.countryDropdownSearchInput() ?? '',
         10,
-        this.internationalizationService.language()
+        this.langService.language()
       ).subscribe();
     });
 
-    // Set search input from query params
+    // Update search - URL to Input
     effect(() => {
       if ('' === this.searchParam()) return;
       this.searchFormControl.setValue(this.searchParam(), { emitEvent: false });
-      this.queryParamsService.update({
+      this.queryService.update({
         search: this.searchParam(),
       }).then();
     });
 
-    // Update query params to match search input
+    // Update search - Input to URL
     this.searchFormControl.valueChanges.subscribe(value => {
-      this.queryParamsService.update({
+      this.queryService.update({
         search: value,
         page: 1
       }).then();
     });
 
-    // Set dropdown input from query params
+    // Update dropdown input - URL to Input
     effect(() => {
       if ('' == this.wikiIdParam() || undefined == this.wikiIdParam()) return;
 
       this.countriesService.fetchCountryDetails(
         this.wikiIdParam(),
-        this.internationalizationService.language()
+        this.langService.language()
       ).subscribe({
         next: (value) => {
           this.countryDropdownDisplayValue.setValue(value.name, { emitEvent: false });
           this.countryWikiId.set(value.wikiDataId);
-          this.queryParamsService.update({
+          this.queryService.update({
             country: value.wikiDataId,
           }).then();
         },
         error: () => {
-          this.queryParamsService.update({
+          this.queryService.update({
             country: '',
           }).then();
         }
       });
     });
 
-    // Update query params to match dropdown input
+    // Update dropdown input - Input to URL
     this.countryDropdownDisplayValue.valueChanges.subscribe(value => {
       console.log("Dropdown selected: " + value);
 
-      this.queryParamsService.update({
+      this.queryService.update({
         country: this.countries()?.get(value ?? '') ?? '',
         page: 1
       }).then();
     });
   }
 
-  // region EVENT HANDLERS
+  protected readonly countries: Signal<Map<string, string>> = computed(() => {
+    const countriesMap = new Map<string, string>();
+
+    this.countriesService.countries().forEach(country => {
+      countriesMap.set(country.name, country.wikiDataId);
+    });
+
+    return countriesMap;
+  });
 
   protected onDropdownInputChange(text: string) {
     console.log('cities.ts: new dropdown input = \"' + text + '\"');
 
     this.countryDropdownSearchInput.set(text);
   }
-
-  // endregion
 }

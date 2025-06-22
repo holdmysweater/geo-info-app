@@ -1,8 +1,9 @@
 <ng-container *transloco="let t">
   <div>
-    <tui-textfield tuiChevron
-                   tuiTextfieldSize="s"
-                   [style.width]="'250px'"
+    <tui-textfield
+      tuiChevron
+      tuiTextfieldSize="s"
+      [style.width]="'250px'"
     >
       <input
         placeholder="{{ t('search.countries.placeholder') }}"
@@ -20,10 +21,10 @@
     </tui-textfield>
 
     <tui-textfield
-      #s
-      iconStart="@tui.search"
-      tuiTextfieldSize="s"
-      [style.width]="'225px'"
+        #s
+        iconStart="@tui.search"
+        tuiTextfieldSize="s"
+        [style.width]="'225px'"
     >
       <input
         tuiTextfield
@@ -34,8 +35,9 @@
   </div>
 
   @if ('' !== this.countryWikiId()) {
-    <app-cities-table [searchParameters]="this.searchFormControl.value ?? ''"
-                      [countryWikiIdParameter]="this.countryWikiId()"
+    <app-cities-table
+      [searchParameters]="this.searchFormControl.value ?? ''"
+      [countryWikiIdParameter]="this.countryWikiId()"
     />
     <app-pagination/>
   }

@@ -18,15 +18,16 @@ import { TuiLoader } from '@taiga-ui/core';
     TuiLoader
   ],
   templateUrl: './cities-table.component.html',
-  styleUrl: './cities-table.component.css'
+  styleUrl: './cities-table.component.css',
+  providers: [CitiesService]
 })
 export class CitiesTableComponent {
-  public searchParameters: InputSignal<string> = input<string>('');
-  public countryWikiIdParameter: InputSignal<string | null> = input<string | null>('');
-
   private readonly citiesService = inject(CitiesService);
   private readonly paginationService = inject(PaginationService);
-  private readonly internationalizationService: InternationalizationService = inject(InternationalizationService);
+  private readonly langService: InternationalizationService = inject(InternationalizationService);
+
+  public searchParameters: InputSignal<string> = input<string>('');
+  public countryWikiIdParameter: InputSignal<string | null> = input<string | null>('');
 
   protected isLoading: WritableSignal<boolean> = signal(true);
   protected readonly cities: Signal<PopulatedPlaceSummary[]> = this.citiesService.cities;
@@ -40,7 +41,7 @@ export class CitiesTableComponent {
         this.countryWikiIdParameter() ?? '',
         this.paginationService.currentPage(),
         this.searchParameters(),
-        this.internationalizationService.language()
+        this.langService.language()
       ).subscribe({
         next: () => this.isLoading.set(false),
         error: () => this.isLoading.set(false)
@@ -49,7 +50,7 @@ export class CitiesTableComponent {
       return () => sub.unsubscribe();
     });
 
-    // Update total page count for pagination component
+    // Update total page count in pagination service
     effect(() => {
       this.paginationService.setTotalPages(this.citiesService.pageCount());
     });
