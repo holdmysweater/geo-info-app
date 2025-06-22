@@ -18,7 +18,6 @@ import { TuiLoader } from '@taiga-ui/core';
     TuiLoader
   ],
   templateUrl: './cities-table.component.html',
-  styleUrl: './cities-table.component.css',
   providers: [CitiesService]
 })
 export class CitiesTableComponent {

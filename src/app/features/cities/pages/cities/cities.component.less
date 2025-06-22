@@ -1,0 +1,15 @@
+@import "../../../../styles/mixins.less";
+
+.cities-container {
+  .container-column();
+  height: 100%;
+
+  & tui-textfield:first-child {
+    width: @app-input-width-normal;
+  }
+
+  & tui-textfield:last-child {
+    width: @app-input-width-small;
+  }
+}
+

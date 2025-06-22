@@ -13,8 +13,24 @@
 }
 
 .container-centered {
+  width: 100%;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
+.container-column-first-grows {
+  .container-column();
+  height: 100%;
+
+  & > :first-child {
+    height: 100%;
+  }
+}
+
+.container-scrollable {
+  .container-centered();
+  height: @app-scrollable-height;
+  overflow: auto;
+}

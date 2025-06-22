@@ -1,17 +1,21 @@
 <ng-container *transloco="let t">
-  <tui-textfield
-    #s
-    iconStart="@tui.search"
-    tuiTextfieldSize="s"
-    [style.width]="'225px'"
-  >
-    <input
-      tuiTextfield
-      [placeholder]="s.focused() ? '' : t('search.placeholder')"
-      [formControl]="this.searchFormControl"
-    />
-  </tui-textfield>
+  <div class="countries-container">
+    <tui-textfield
+      #s
+      iconStart="@tui.search"
+      tuiTextfieldSize="s"
+    >
+      <input
+        tuiTextfield
+        [placeholder]="s.focused() ? '' : t('search.placeholder')"
+        [formControl]="this.searchFormControl"
+      />
+    </tui-textfield>
 
-  <app-countries-table [searchParameters]="this.searchFormControl.value ?? ''"/>
-  <app-pagination/>
+    <div class="container-column-first-grows">
+      <app-countries-table [searchParameters]="this.searchFormControl.value ?? ''"/>
+      <app-pagination/>
+    </div>
+  </div>
 </ng-container>
+

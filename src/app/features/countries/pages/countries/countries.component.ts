@@ -20,7 +20,7 @@ import { QueryParametersService } from '../../../../shared/services/query-parame
     TranslocoDirective
   ],
   templateUrl: './countries.component.html',
-  styleUrl: './countries.component.css',
+  styleUrl: './countries.component.less',
   providers: [PaginationService]
 })
 export class CountriesComponent {

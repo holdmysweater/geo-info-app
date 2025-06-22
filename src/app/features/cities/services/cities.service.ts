@@ -1,7 +1,6 @@
 import { computed, inject, Injectable, Signal, signal, WritableSignal } from '@angular/core';
-import { catchError, map, Observable, of, tap } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { CitiesListResponse, PopulatedPlaceSummary } from '../models/city.model';
-import { CountryListResponse } from '../../countries/models/country.model';
 import { CitiesApiService } from './cities.api.service';
 import { CountriesApiService } from '../../countries/services/countries.api.service';
 
@@ -13,7 +12,7 @@ export class CitiesService {
   private readonly _cities: WritableSignal<PopulatedPlaceSummary[]> = signal<PopulatedPlaceSummary[]>([]);
   private readonly _total: WritableSignal<number> = signal<number>(0);
   private readonly _currentOffset: WritableSignal<number> = signal<number>(0);
-  private readonly _pageItemsLimit: WritableSignal<number> = signal<number>(5);
+  private readonly _pageItemsLimit: WritableSignal<number> = signal<number>(6);
 
   public readonly cities: Signal<PopulatedPlaceSummary[]> = this._cities.asReadonly();
   public readonly total: Signal<number> = this._total.asReadonly();
