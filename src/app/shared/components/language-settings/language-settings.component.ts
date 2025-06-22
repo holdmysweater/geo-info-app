@@ -1,4 +1,4 @@
-import { Component, effect, inject, Signal } from '@angular/core';
+import { Component, effect, inject } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TuiRadioList } from '@taiga-ui/kit';
 import { InternationalizationService } from '../../services/internationalization.service';
@@ -15,29 +15,29 @@ import { QueryParametersService } from '../../services/query-parameters.service'
   styleUrl: './language-settings.component.css'
 })
 export class LanguageSettings {
-  private readonly internationalizationService: InternationalizationService = inject(InternationalizationService);
-  private readonly queryParamsService: QueryParametersService = inject(QueryParametersService);
+  protected readonly langService: InternationalizationService = inject(InternationalizationService);
+  private readonly queryService: QueryParametersService = inject(QueryParametersService);
 
   protected readonly languageFormControl: FormControl<string | null> = new FormControl('');
-  protected readonly options: readonly string[] = this.internationalizationService.getOptions();
-
-  private readonly language: Signal<string> = this.internationalizationService.language;
 
   constructor() {
+    // Update language - Service to Input
     effect(() => {
-      this.languageFormControl.setValue(this.language(), { emitEvent: false });
+      this.languageFormControl.setValue(this.langService.language(), { emitEvent: false });
     });
 
-    this.queryParamsService.watchParam('lang').subscribe(value => {
-      this.internationalizationService.setLanguage(value ?? '');
+    // Update language - URL to Service
+    this.queryService.watchParam('lang').subscribe((value: string | null) => {
+      this.langService.setLanguage(value ?? '');
     });
 
-    this.languageFormControl.valueChanges.subscribe(value => {
-      console.log('language-settings.component.ts: changed value to \"' + this.languageFormControl.value + '\"');
+    // Update language - Service to URL
+    this.languageFormControl.valueChanges.subscribe((value: string | null) => {
+      console.log('language-settings.component.ts: changed value to \"' + value + '\"');
 
-      this.internationalizationService.setLanguage(this.languageFormControl.value ?? '');
-      this.queryParamsService.update({
-        lang: this.language()
+      this.langService.setLanguage(value ?? '');
+      this.queryService.update({
+        lang: this.langService.language()
       }).then();
     });
   }
