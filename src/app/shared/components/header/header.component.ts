@@ -9,8 +9,7 @@ import { translateSignal } from '@jsverse/transloco';
     TuiTitle,
     LanguageSettings
   ],
-  templateUrl: './header.component.html',
-  styleUrl: './header.component.css'
+  templateUrl: './header.component.html'
 })
 export class HeaderComponent {
   protected title = translateSignal('header.title');
