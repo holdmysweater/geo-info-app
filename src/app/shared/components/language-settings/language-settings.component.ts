@@ -11,8 +11,7 @@ import { QueryParametersService } from '../../services/query-parameters.service'
     TuiRadioList,
     ReactiveFormsModule
   ],
-  templateUrl: './language-settings.component.html',
-  styleUrl: './language-settings.component.css'
+  templateUrl: './language-settings.component.html'
 })
 export class LanguageSettings {
   protected readonly langService: InternationalizationService = inject(InternationalizationService);
