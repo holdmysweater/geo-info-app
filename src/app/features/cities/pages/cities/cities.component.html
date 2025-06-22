@@ -35,14 +35,17 @@
       </tui-textfield>
     </div>
 
-    @if ('' !== this.countryWikiId()) {
-      <div class="container-column-first-grows">
+    <div class="container-column-first-grows">
+      @if ('' !== countryWikiId()) {
         <app-cities-table
-          [searchParameters]="this.searchFormControl.value ?? ''"
-          [countryWikiIdParameter]="this.countryWikiId()"
+          [searchParameters]="searchFormControl.value ?? ''"
+          [countryWikiIdParameter]="countryWikiId()"
         />
         <app-pagination/>
-      </div>
-    }
+
+      } @else if (('' != wikiIdParam() || undefined != wikiIdParam())) {
+        <tui-loader/>
+      }
+    </div>
   </div>
 </ng-container>

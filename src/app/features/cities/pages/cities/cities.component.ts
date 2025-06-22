@@ -1,6 +1,7 @@
 import { Component, computed, effect, inject, input, InputSignal, Signal, signal, WritableSignal } from '@angular/core';
 import { CitiesTableComponent } from '../../components/cities-table/cities-table.component';
 import {
+  TuiLoader,
   TuiTextfieldComponent,
   TuiTextfieldDirective,
   TuiTextfieldDropdownDirective,
@@ -29,7 +30,8 @@ import { QueryParametersService } from '../../../../shared/services/query-parame
     TuiTextfieldDropdownDirective,
     TuiDataListWrapperComponent,
     PaginationComponent,
-    TranslocoDirective
+    TranslocoDirective,
+    TuiLoader
   ],
   templateUrl: './cities.component.html',
   styleUrl: './cities.component.less',
