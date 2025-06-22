@@ -8,12 +8,12 @@
       <input
         tuiTextfield
         [placeholder]="s.focused() ? '' : t('search.placeholder')"
-        [formControl]="this.searchFormControl"
+        [formControl]="searchFormControl"
       />
     </tui-textfield>
 
     <div class="container-column-first-grows">
-      <app-countries-table [searchParameters]="this.searchFormControl.value ?? ''"/>
+      <app-countries-table [searchParameters]="searchFormControl.value ?? ''"/>
       <app-pagination/>
     </div>
   </div>
