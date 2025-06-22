@@ -52,7 +52,7 @@
                   [style.color]="'#6a6c7e'"
                   [style.width]="'15px'"
                   [routerLink]="'/cities'"
-                  [queryParams]="{ name: country.name, wikiId: country.wikiDataId }"
+                  [queryParams]="{ country: country.wikiDataId, lang: this.internationalizationService.language() }"
                 />
               </a>
             </td>

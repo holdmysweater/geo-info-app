@@ -30,7 +30,7 @@ export class CountriesTableComponent {
 
   private readonly countriesService: CountriesService = inject(CountriesService);
   private readonly paginationService: PaginationService = inject(PaginationService);
-  private readonly internationalizationService: InternationalizationService = inject(InternationalizationService);
+  protected readonly internationalizationService: InternationalizationService = inject(InternationalizationService);
 
   protected isLoading: boolean = true;
   protected readonly countries: Signal<CountrySummary[]> = this.countriesService.countries;
