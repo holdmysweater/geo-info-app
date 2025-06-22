@@ -1,4 +1,4 @@
-import { Component, effect, inject, input, InputSignal, Signal } from '@angular/core';
+import { Component, effect, inject, input, InputSignal, signal, Signal, WritableSignal } from '@angular/core';
 import { TuiTableDirective, TuiTableTbody, TuiTableTd, TuiTableTh } from "@taiga-ui/addon-table";
 import { FormsModule } from '@angular/forms';
 import { CountrySummary } from '../../models/country.model';
@@ -23,36 +23,35 @@ import { CountriesService } from '../../services/countries.service';
     TuiLoader
   ],
   templateUrl: './countries-table.component.html',
-  styleUrl: './countries-table.component.css'
+  styleUrl: './countries-table.component.css',
+  providers: [CountriesService]
 })
 export class CountriesTableComponent {
-  public searchParameters: InputSignal<string | undefined> = input<string>();
-
   private readonly countriesService: CountriesService = inject(CountriesService);
   private readonly paginationService: PaginationService = inject(PaginationService);
-  protected readonly internationalizationService: InternationalizationService = inject(InternationalizationService);
+  protected readonly langService: InternationalizationService = inject(InternationalizationService);
 
-  protected isLoading: boolean = true;
+  public searchParameters: InputSignal<string | undefined> = input<string>();
+
+  protected isLoading: WritableSignal<boolean> = signal(true);
   protected readonly countries: Signal<CountrySummary[]> = this.countriesService.countries;
 
   constructor() {
     // Update countries list
     effect(() => {
-      this.isLoading = true;
+      this.isLoading.set(true);
+
       this.countriesService.fetchPage(
         this.paginationService.currentPage(),
         this.searchParameters(),
-        this.internationalizationService.language()
-      ).subscribe();
+        this.langService.language()
+      ).subscribe({
+        next: () => this.isLoading.set(false),
+        error: () => this.isLoading.set(false)
+      });
     });
 
-    // Reset loading flag after countries update
-    effect(() => {
-      this.countries();
-      this.isLoading = false;
-    });
-
-    // Update total page count
+    // Update total page count in pagination service
     effect(() => {
       this.paginationService.setTotalPages(this.countriesService.pageCount());
     });

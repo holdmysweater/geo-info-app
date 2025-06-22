@@ -1,5 +1,4 @@
 import { Component, effect, inject, input, InputSignal } from '@angular/core';
-import { CountriesService } from '../../services/countries.service';
 import { CountriesTableComponent } from '../../components/countries-table/countries-table.component';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TuiTextfieldComponent, TuiTextfieldDirective, TuiTextfieldOptionsDirective } from '@taiga-ui/core';
@@ -22,7 +21,7 @@ import { QueryParametersService } from '../../../../shared/services/query-parame
   ],
   templateUrl: './countries.component.html',
   styleUrl: './countries.component.css',
-  providers: [CountriesService, PaginationService]
+  providers: [PaginationService]
 })
 export class CountriesComponent {
   private readonly queryParamsService: QueryParametersService = inject(QueryParametersService);
@@ -32,7 +31,7 @@ export class CountriesComponent {
   protected readonly searchFormControl: FormControl<string | null> = new FormControl('');
 
   constructor() {
-    // Set search input from query params
+    // Update search - URL to Input
     effect(() => {
       if ('' === this.searchParam()) return;
       this.searchFormControl.setValue(this.searchParam(), { emitEvent: false });
@@ -41,7 +40,7 @@ export class CountriesComponent {
       }).then();
     });
 
-    // Update query params to match search input
+    // Update search - Input to URL
     this.searchFormControl.valueChanges.subscribe(value => {
       this.queryParamsService.update({
         search: value,

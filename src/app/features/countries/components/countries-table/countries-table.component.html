@@ -1,5 +1,5 @@
 <ng-container *transloco="let t">
-  @if (isLoading) {
+  @if (isLoading()) {
     <tui-loader/>
   } @else if (countries().length > 0) {
     <table
@@ -52,7 +52,7 @@
                   [style.color]="'#6a6c7e'"
                   [style.width]="'15px'"
                   [routerLink]="'/cities'"
-                  [queryParams]="{ country: country.wikiDataId, lang: this.internationalizationService.language() }"
+                  [queryParams]="{ country: country.wikiDataId, lang: this.langService.language() }"
                 />
               </a>
             </td>
