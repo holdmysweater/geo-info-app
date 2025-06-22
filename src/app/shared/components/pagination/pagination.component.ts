@@ -8,8 +8,7 @@ import { QueryParametersService } from '../../services/query-parameters.service'
   imports: [
     TuiPagination
   ],
-  templateUrl: './pagination.component.html',
-  styleUrl: './pagination.component.css'
+  templateUrl: './pagination.component.html'
 })
 export class PaginationComponent {
   protected readonly paginationService: PaginationService = inject(PaginationService);

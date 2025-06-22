@@ -1,0 +1,21 @@
+@import "../variables.less";
+
+app-pagination {
+  tui-pagination {
+    [tuiButton] {
+      border-radius: 100%;
+      width: @app-icon-size !important;
+      height: @app-icon-size;
+      font-weight: bold !important;
+
+      &[tuiAppearance][data-appearance='primary'] {
+        box-shadow: @shadow-small;
+      }
+    }
+
+    > div {
+      align-items: center;
+      justify-content: start !important;
+    }
+  }
+}
