@@ -1,0 +1,16 @@
+@import './styles/main.less';
+
+.app-container {
+  .container-centered();
+  min-height: 100vh;
+
+  .app-card {
+    .container-column();
+    width: @app-card-width;
+    height: @app-card-height;
+    padding: 32px;
+    border-radius: 15px;
+    background: @background-color;
+    box-shadow: @shadow;
+  }
+}
