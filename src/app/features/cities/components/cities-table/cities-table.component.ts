@@ -1,4 +1,4 @@
-import { Component, effect, inject, input, InputSignal, Signal } from '@angular/core';
+import { Component, effect, inject, input, InputSignal, signal, Signal, WritableSignal } from '@angular/core';
 import { TuiTableDirective, TuiTableTbody, TuiTableTd, TuiTableTh } from '@taiga-ui/addon-table';
 import { PopulatedPlaceSummary } from '../../models/city.model';
 import { TranslocoDirective } from '@jsverse/transloco';
@@ -28,26 +28,25 @@ export class CitiesTableComponent {
   private readonly paginationService = inject(PaginationService);
   private readonly internationalizationService: InternationalizationService = inject(InternationalizationService);
 
-  protected isLoading: boolean = false;
+  protected isLoading: WritableSignal<boolean> = signal(true);
   protected readonly cities: Signal<PopulatedPlaceSummary[]> = this.citiesService.cities;
 
   constructor() {
     // Update cities list
     effect(() => {
-      this.isLoading = true;
+      this.isLoading.set(true);
 
-      this.citiesService.fetchPage(
+      const sub = this.citiesService.fetchPage(
         this.countryWikiIdParameter() ?? '',
         this.paginationService.currentPage(),
         this.searchParameters(),
         this.internationalizationService.language()
-      ).subscribe();
-    });
+      ).subscribe({
+        next: () => this.isLoading.set(false),
+        error: () => this.isLoading.set(false)
+      });
 
-    // Reset loading flag after cities update
-    effect(() => {
-      this.cities();
-      this.isLoading = false;
+      return () => sub.unsubscribe();
     });
 
     // Update total page count for pagination component

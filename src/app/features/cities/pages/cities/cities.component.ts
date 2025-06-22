@@ -1,15 +1,4 @@
-import {
-  Component,
-  computed,
-  effect,
-  inject,
-  input,
-  InputSignal,
-  Signal,
-  signal,
-  untracked,
-  WritableSignal
-} from '@angular/core';
+import { Component, computed, effect, inject, input, InputSignal, Signal, signal, WritableSignal } from '@angular/core';
 import { CitiesService } from '../../services/cities.service';
 import { CitiesTableComponent } from '../../components/cities-table/cities-table.component';
 import {
@@ -57,10 +46,22 @@ export class CitiesComponent {
   protected searchParam: InputSignal<string> = input('', { alias: 'search' });
   protected readonly searchFormControl: FormControl<string | null> = new FormControl('');
 
-  protected readonly countryDropdownSearchInput: WritableSignal<string | null> = signal(null);
+  protected wikiIdParam: InputSignal<string> = input('', { alias: 'country' });
+  protected countryWikiId: WritableSignal<string> = signal<string>('');
 
+  protected readonly countryDropdownSearchInput: WritableSignal<string | null> = signal(null);
   protected readonly countryDropdownDisplayValue: FormControl<string | null> = new FormControl(null);
-  protected readonly countryWikiId = signal<string>('');
+
+  protected readonly countries: Signal<Map<string, string>> = computed(() => {
+    const currentCountries = this.countriesService.countries();
+    const countriesMap = new Map<string, string>();
+
+    currentCountries.forEach(country => {
+      countriesMap.set(country.name, country.wikiDataId);
+    });
+
+    return countriesMap;
+  });
 
   constructor() {
     // Update countries list
@@ -70,20 +71,6 @@ export class CitiesComponent {
         10,
         this.internationalizationService.language()
       ).subscribe();
-    });
-
-    // Update city name
-    effect(() => {
-      const countryWikiId = untracked(() => this.countryWikiId());
-
-      if (null == countryWikiId) return;
-
-      this.countriesService.fetchCountryDetails(
-        countryWikiId,
-        this.internationalizationService.language()
-      ).subscribe(value => {
-        this.countryDropdownDisplayValue.setValue(value.name, { emitEvent: false });
-      });
     });
 
     // Set search input from query params
@@ -102,22 +89,40 @@ export class CitiesComponent {
         page: 1
       }).then();
     });
-  }
 
-  private ngOnInit(): void {
-    this.subscribeToDropdownValueChanges();
-  }
+    // Set dropdown input from query params
+    effect(() => {
+      if ('' == this.wikiIdParam() || undefined == this.wikiIdParam()) return;
 
-  protected readonly countries: Signal<Map<string, string>> = computed(() => {
-    const currentCountries = this.countriesService.countries();
-    const countriesMap = new Map<string, string>();
-
-    currentCountries.forEach(country => {
-      countriesMap.set(country.name, country.wikiDataId);
+      this.countriesService.fetchCountryDetails(
+        this.wikiIdParam(),
+        this.internationalizationService.language()
+      ).subscribe({
+        next: (value) => {
+          this.countryDropdownDisplayValue.setValue(value.name, { emitEvent: false });
+          this.countryWikiId.set(value.wikiDataId);
+          this.queryParamsService.update({
+            country: value.wikiDataId,
+          }).then();
+        },
+        error: () => {
+          this.queryParamsService.update({
+            country: '',
+          }).then();
+        }
+      });
     });
 
-    return countriesMap;
-  });
+    // Update query params to match dropdown input
+    this.countryDropdownDisplayValue.valueChanges.subscribe(value => {
+      console.log("Dropdown selected: " + value);
+
+      this.queryParamsService.update({
+        country: this.countries()?.get(value ?? '') ?? '',
+        page: 1
+      }).then();
+    });
+  }
 
   // region EVENT HANDLERS
 
@@ -125,18 +130,6 @@ export class CitiesComponent {
     console.log('cities.ts: new dropdown input = \"' + text + '\"');
 
     this.countryDropdownSearchInput.set(text);
-  }
-
-  // endregion
-
-  // region SUBSCRIPTIONS
-
-  private subscribeToDropdownValueChanges() {
-    this.countryDropdownDisplayValue.valueChanges.subscribe(value => {
-      console.log("Dropdown selected: " + value);
-
-      this.countryWikiId.set(this.countries()?.get(value ?? '') ?? '');
-    });
   }
 
   // endregion
