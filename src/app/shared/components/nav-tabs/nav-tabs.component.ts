@@ -13,8 +13,7 @@ import { InternationalizationService } from '../../services/internationalization
     TuiTabsHorizontal
   ],
   templateUrl: './nav-tabs.component.html',
-  styleUrl: './nav-tabs.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NavTabsComponent {
   protected readonly langService: InternationalizationService = inject(InternationalizationService);

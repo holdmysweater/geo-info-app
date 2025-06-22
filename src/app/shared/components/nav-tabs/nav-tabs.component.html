@@ -1,13 +1,10 @@
-<tui-tabs [style]="{'--t-color': '#656565'}"
-          [style.height]="'45px'"
->
+<tui-tabs>
   @for (tab of tabs; track tab.url) {
     <a tuiTab
        type="button"
        routerLinkActive="active"
        [routerLink]="tab.url"
        [queryParams]="{ lang: langService.language() }"
-       [style.font-size.px]="14"
     >
       {{ tab.label() }}
     </a>
