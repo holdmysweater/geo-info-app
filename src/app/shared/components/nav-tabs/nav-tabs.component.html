@@ -8,6 +8,7 @@
       type="button"
       routerLinkActive="active"
       [routerLink]="tab.url"
+      [queryParams]="{ lang: this.language() }"
       [style.font-size.px]="14"
     >
       {{ tab.label() }}

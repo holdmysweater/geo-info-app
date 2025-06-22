@@ -1,7 +1,8 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, Signal } from '@angular/core';
 import { TuiTab, TuiTabsHorizontal } from "@taiga-ui/kit";
 import { RouterLink, RouterLinkActive } from "@angular/router";
 import { translateSignal } from '@jsverse/transloco';
+import { InternationalizationService } from '../../services/internationalization.service';
 
 @Component({
   selector: 'app-nav-tabs',
@@ -16,6 +17,10 @@ import { translateSignal } from '@jsverse/transloco';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NavTabsComponent {
+  private readonly internationalizationService: InternationalizationService = inject(InternationalizationService);
+
+  protected readonly language: Signal<string> = this.internationalizationService.language;
+
   protected readonly tabs = [
     { url: 'countries', label: translateSignal('navigation.countries') },
     { url: 'cities', label: translateSignal('navigation.cities') }
