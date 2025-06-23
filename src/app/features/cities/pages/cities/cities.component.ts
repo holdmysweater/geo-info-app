@@ -81,7 +81,7 @@ export class CitiesComponent {
 
     // Update dropdown input - URL to Input
     effect(() => {
-      if ('' == this.wikiIdParam() || undefined == this.wikiIdParam()) return;
+      if (undefined == this.wikiIdParam()) return;
 
       this.countriesService.fetchCountryDetails(
         this.wikiIdParam(),
