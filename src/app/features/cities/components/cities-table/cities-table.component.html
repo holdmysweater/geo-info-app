@@ -21,6 +21,7 @@
           <th tuiTh>
             {{ t('cities-table.population') }}
           </th>
+          <th tuiTh></th>
         </tr>
         </thead>
         <tbody tuiTbody>
@@ -37,6 +38,31 @@
               </td>
               <td tuiTd>
                 {{ city.population }}
+              </td>
+              <td
+                class="container-end"
+                tuiTd
+              >
+                <button
+                  class="button-normal"
+                  tuiButton
+                  type="button"
+                >
+                  <tui-icon
+                    class="icon-button"
+                    icon="@tui.pencil-line"
+                  />
+                </button>
+                <button
+                  class="button-normal"
+                  tuiButton
+                  type="button"
+                >
+                  <tui-icon
+                    class="icon-button"
+                    icon="@tui.eye"
+                  />
+                </button>
               </td>
             </tr>
           }
