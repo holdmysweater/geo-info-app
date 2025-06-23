@@ -1,5 +1,5 @@
-<div class="countries-table">
-  <ng-container *transloco="let t">
+<ng-container *transloco="let t">
+  <div class="container-scrollable">
     @if (isLoading()) {
       <tui-loader/>
     } @else if (countries().length > 0) {
@@ -27,12 +27,13 @@
           @for (country of countries(); track country.wikiDataId) {
             <tr>
               <td
+                class="container-space-between"
                 tuiTd
-                class="country-id"
               >
                 <span>{{ country.wikiDataId }}</span>
                 <a>
                   <tui-icon
+                    class="icon-button"
                     icon="@tui.external-link"
                     [routerLink]="'/cities'"
                     [queryParams]="{ country: country.wikiDataId, lang: this.langService.language() }"
@@ -57,5 +58,5 @@
     } @else {
       <tui-loader/>
     }
-  </ng-container>
-</div>
+  </div>
+</ng-container>

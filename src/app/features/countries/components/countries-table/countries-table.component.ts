@@ -23,7 +23,6 @@ import { CountriesService } from '../../services/countries.service';
     TuiLoader
   ],
   templateUrl: './countries-table.component.html',
-  styleUrl: './countries-table.component.less',
   providers: [CountriesService]
 })
 export class CountriesTableComponent {

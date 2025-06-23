@@ -5,7 +5,7 @@ import { TranslocoDirective } from '@jsverse/transloco';
 import { PaginationService } from '../../../../shared/services/pagination.service';
 import { InternationalizationService } from '../../../../shared/services/internationalization.service';
 import { CitiesService } from '../../services/cities.service';
-import { TuiLoader } from '@taiga-ui/core';
+import { TuiButton, TuiIcon, TuiLoader } from '@taiga-ui/core';
 
 @Component({
   selector: 'app-cities-table',
@@ -15,7 +15,9 @@ import { TuiLoader } from '@taiga-ui/core';
     TuiTableTd,
     TuiTableTh,
     TranslocoDirective,
-    TuiLoader
+    TuiLoader,
+    TuiIcon,
+    TuiButton
   ],
   templateUrl: './cities-table.component.html',
   providers: [CitiesService]

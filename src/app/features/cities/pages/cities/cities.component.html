@@ -36,14 +36,14 @@
     </div>
 
     <div class="container-column-first-grows">
-      @if ('' !== countryWikiId()) {
+      @if ('' !== countryWikiId() && null != countryDropdownDisplayValue.value) {
         <app-cities-table
           [searchParameters]="searchFormControl.value ?? ''"
           [countryWikiIdParameter]="countryWikiId()"
         />
         <app-pagination/>
 
-      } @else if (('' != wikiIdParam() || undefined != wikiIdParam())) {
+      } @else if ('' !== wikiIdParam() && undefined !== wikiIdParam()) {
         <tui-loader/>
       }
     </div>

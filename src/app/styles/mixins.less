@@ -20,6 +20,16 @@
   justify-content: center;
 }
 
+.container-space-between {
+  .container-centered();
+  justify-content: space-between;
+}
+
+.container-end {
+  .container-centered();
+  justify-content: end;
+}
+
 .container-column-first-grows {
   .container-column();
   height: 100%;
@@ -33,4 +43,20 @@
   .container-centered();
   height: @app-scrollable-height;
   overflow: auto;
+}
+
+.icon-button {
+  width: @app-icon-size-small;
+  color: @secondary-color;
+  margin-right: 60px;
+  transition: 0.3s ease-in-out;
+
+  &:hover {
+    cursor: pointer;
+    color: @highlight-color-light;
+  }
+}
+
+.button-normal {
+  background: none !important;
 }
