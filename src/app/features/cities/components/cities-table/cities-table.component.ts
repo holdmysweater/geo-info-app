@@ -5,7 +5,9 @@ import { TranslocoDirective } from '@jsverse/transloco';
 import { PaginationService } from '../../../../shared/services/pagination.service';
 import { InternationalizationService } from '../../../../shared/services/internationalization.service';
 import { CitiesService } from '../../services/cities.service';
-import { TuiButton, TuiIcon, TuiLoader } from '@taiga-ui/core';
+import { TuiButton, tuiDialog, TuiIcon, TuiLoader } from '@taiga-ui/core';
+import { CitiesInfoComponent } from '../cities-info/cities-info.component';
+import { CitiesFormComponent } from '../cities-form/cities-form.component';
 
 @Component({
   selector: 'app-cities-table',
@@ -56,4 +58,32 @@ export class CitiesTableComponent {
       this.paginationService.setTotalPages(this.citiesService.pageCount());
     });
   }
+
+  // region INFO DIALOG
+
+  private readonly infoDialog = tuiDialog(CitiesInfoComponent, {
+    dismissible: true,
+    closeable: false,
+    size: 's'
+  });
+
+  protected showInfoDialog(id: string): void {
+    this.infoDialog(id).subscribe();
+  }
+
+  // endregion
+
+  // region FORM DIALOG
+
+  private readonly formDialog = tuiDialog(CitiesFormComponent, {
+    dismissible: false,
+    closeable: false,
+    size: 'm'
+  });
+
+  protected showFormDialog(id: string): void {
+    this.formDialog(id).subscribe();
+  }
+
+  // endregion
 }

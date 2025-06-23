@@ -51,6 +51,7 @@
                   <tui-icon
                     class="icon-button"
                     icon="@tui.pencil-line"
+                    (click)="showFormDialog(city.wikiDataId)"
                   />
                 </button>
                 <button
@@ -61,6 +62,7 @@
                   <tui-icon
                     class="icon-button"
                     icon="@tui.eye"
+                    (click)="showInfoDialog(city.wikiDataId)"
                   />
                 </button>
               </td>
