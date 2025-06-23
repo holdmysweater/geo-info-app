@@ -1,0 +1,97 @@
+<ng-container *transloco="let t">
+  <div class="dialog-container">
+    @if (isLoading()) {
+      <tui-loader/>
+    } @else if (cityDetails()) {
+      <h2>{{ cityDetails()!.name }}</h2>
+
+      <div class="container-column">
+        <div class="container-space-between">
+          <div class="container-column">
+            <tui-textfield>
+              <label tuiLabel>{{ t('cities-table.region') }}</label>
+              <input
+                tuiTextfield
+                [formControl]="regionControl"
+              />
+            </tui-textfield>
+          </div>
+        </div>
+
+        <div class="container-space-between">
+          <div class="container-column">
+            <tui-textfield>
+              <label tuiLabel>{{ t('cities-table.population') }}</label>
+              <input
+                tuiInputNumber
+                [formControl]="populationControl"
+                [tuiNumberFormat]="numberFormat"
+              />
+            </tui-textfield>
+          </div>
+
+          <div class="container-column">
+            <div
+              class="wrapper tui-space_top-3"
+              [tuiDateFormat]="{mode: 'YMD'}"
+            >
+              <tui-input-date
+                [formControl]="dateControl"
+                [tuiDateFormat]="{separator: '-'}"
+              >
+                {{ t('cities-table.foundation-date') }}
+                <input tuiTextfieldLegacy/>
+              </tui-input-date>
+            </div>
+          </div>
+        </div>
+
+        <div class="container-space-between">
+          <div class="container-column">
+            <tui-textfield>
+              <label tuiLabel>{{ t('cities-table.longitude') }}</label>
+              <input
+                tuiInputNumber
+                [formControl]="longitudeControl"
+                [tuiNumberFormat]="numberFormat"
+              />
+            </tui-textfield>
+          </div>
+
+          <div class="container-column">
+            <tui-textfield>
+              <label tuiLabel>{{ t('cities-table.latitude') }}</label>
+              <input
+                tuiInputNumber
+                [formControl]="latitudeControl"
+                [tuiNumberFormat]="numberFormat"
+              />
+            </tui-textfield>
+          </div>
+        </div>
+      </div>
+
+      <div class="container-end">
+        <button
+          [size]="'m'"
+
+          appearance="flat-destructive"
+          tuiButton
+          (click)="closeDialog()"
+        >
+          {{ t('actions.cancel') }}
+        </button>
+
+        <button
+          [size]="'m'"
+          appearance="primary"
+          tuiButton
+          [disabled]="true"
+          (click)="closeDialog()"
+        >
+          {{ t('actions.save') }}
+        </button>
+      </div>
+    }
+  </div>
+</ng-container>
