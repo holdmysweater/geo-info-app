@@ -6,6 +6,11 @@
     "countries": "Страны",
     "cities": "Города"
   },
+  "actions": {
+    "close": "Закрыть",
+    "save": "Сохранить",
+    "cancel": "Отменить"
+  },
   "search": {
     "placeholder": "Поиск",
     "in-progress": "Идёт поиск...",
@@ -29,6 +34,9 @@
     "country": "Страна",
     "name": "Наименование",
     "region": "Регион",
-    "population": "Население"
+    "population": "Население",
+    "foundation-date": "Дата основания",
+    "longitude": "Долгота",
+    "latitude": "Широта"
   }
 }

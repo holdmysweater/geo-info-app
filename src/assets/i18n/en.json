@@ -6,6 +6,11 @@
     "countries": "Countries",
     "cities": "Cities"
   },
+  "actions": {
+    "close": "Close",
+    "save": "Save",
+    "cancel": "Cancel"
+  },
   "search": {
     "placeholder": "Search",
     "in-progress": "Searching...",
@@ -29,6 +34,9 @@
     "country": "Country",
     "name": "Name",
     "region": "Region",
-    "population": "Population"
+    "population": "Population",
+    "foundation-date": "Foundation Date",
+    "longitude": "Longitude",
+    "latitude": "Latitude"
   }
 }
