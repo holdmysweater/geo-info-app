@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { CitiesListResponse } from '../models/city.model';
+import { CitiesListResponse, CityDetailsResponse } from '../models/city.model';
 
 @Injectable({
   providedIn: 'root'
@@ -29,5 +29,15 @@ export class CitiesApiService {
       .set('sort', sort);
 
     return this.http.get<CitiesListResponse>(this.baseUrl, { params });
+  }
+
+  public getCityDetails(
+    cityId: string,
+    languageCode: string
+  ): Observable<CityDetailsResponse> {
+    const params = new HttpParams()
+      .set('languageCode', languageCode);
+
+    return this.http.get<CityDetailsResponse>(this.baseUrl + '/' + cityId, { params });
   }
 }

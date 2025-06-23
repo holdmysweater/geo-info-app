@@ -1,13 +1,11 @@
 import { computed, inject, Injectable, Signal, signal, WritableSignal } from '@angular/core';
-import { Observable, tap } from 'rxjs';
-import { CitiesListResponse, PopulatedPlaceSummary } from '../models/city.model';
+import { map, Observable, tap } from 'rxjs';
+import { CitiesListResponse, CityDetails, PopulatedPlaceSummary } from '../models/city.model';
 import { CitiesApiService } from './cities.api.service';
-import { CountriesApiService } from '../../countries/services/countries.api.service';
 
 @Injectable()
 export class CitiesService {
   private readonly api: CitiesApiService = inject(CitiesApiService);
-  private readonly countryApi: CountriesApiService = inject(CountriesApiService);
 
   private readonly _cities: WritableSignal<PopulatedPlaceSummary[]> = signal<PopulatedPlaceSummary[]>([]);
   private readonly _total: WritableSignal<number> = signal<number>(0);
@@ -58,6 +56,15 @@ export class CitiesService {
     if (pageItemsLimit) this._pageItemsLimit.set(pageItemsLimit);
     const offset = pageIndex * this._pageItemsLimit();
     return this.fetchCities(wikiId, namePrefix, languageCode, sort, undefined, offset);
+  }
+
+  public fetchCityDetails(
+    cityId: string,
+    languageCode: string
+  ): Observable<CityDetails> {
+    return this.api.getCityDetails(cityId, languageCode).pipe(
+      map(response => response.data)
+    );
   }
 
   // endregion

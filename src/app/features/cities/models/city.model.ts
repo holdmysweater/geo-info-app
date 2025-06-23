@@ -31,3 +31,26 @@ export interface CitiesListResponse {
   metadata: CitiesListMetadata;
 }
 
+export interface CityDetailsResponse {
+  data: CityDetails;
+}
+
+export interface CityDetails {
+  id: number;
+  wikiDataId: string;
+  type: "ADM2" | "CITY" | "ISLAND";
+  name: string;
+  city: string | null;
+  country: string;
+  countryCode: string;
+  region: string;
+  regionWdId: string;
+  regionCode: string;
+  elevationMeters: number;
+  latitude: number;
+  longitude: number;
+  population: number;
+  timezone: string;
+  deleted: boolean;
+}
+
