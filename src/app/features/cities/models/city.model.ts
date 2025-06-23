@@ -52,5 +52,6 @@ export interface CityDetails {
   population: number;
   timezone: string;
   deleted: boolean;
+  dateOfFoundation?: Date | null;
 }
 
