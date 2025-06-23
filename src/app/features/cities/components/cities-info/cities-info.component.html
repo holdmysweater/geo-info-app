@@ -1,0 +1,51 @@
+<ng-container *transloco="let t">
+  <div class="dialog-container">
+    @if (isLoading()) {
+      <tui-loader/>
+    } @else if (cityDetails()) {
+      <h2>{{ cityDetails()!.name }}</h2>
+
+      <div class="container-column">
+        <div class="container-space-between">
+          <div class="container-column">
+            <h5>{{ t('cities-table.country') }}</h5>
+            <p>{{ cityDetails()!.country }}</p>
+          </div>
+          <div class="container-column">
+            <h5>{{ t('cities-table.region') }}</h5>
+            <p>{{ cityDetails()!.region }}</p>
+          </div>
+        </div>
+        <div class="container-space-between">
+          <div class="container-column">
+            <h5>{{ t('cities-table.population') }}</h5>
+            <p>{{ cityDetails()!.population }}</p>
+          </div>
+          <div class="container-column">
+            <h5>{{ t('cities-table.foundation-date') }}</h5>
+            <p>{{ cityDetails()!.dateOfFoundation ?? '-' }}</p>
+          </div>
+        </div>
+        <div class="container-space-between">
+          <div class="container-column">
+            <h5>{{ t('cities-table.longitude') }}</h5>
+            <p>{{ cityDetails()!.longitude }}</p>
+          </div>
+          <div class="container-column">
+            <h5>{{ t('cities-table.latitude') }}</h5>
+            <p>{{ cityDetails()!.latitude }}</p>
+          </div>
+        </div>
+      </div>
+
+      <button
+        [size]="'m'"
+        appearance="outline"
+        tuiButton
+        (click)="closeDialog()"
+      >
+        {{ t('actions.close') }}
+      </button>
+    }
+  </div>
+</ng-container>

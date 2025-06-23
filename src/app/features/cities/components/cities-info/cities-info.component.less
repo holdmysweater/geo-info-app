@@ -1,0 +1,34 @@
+@import "../../../../styles/mixins.less";
+
+.dialog-container {
+  .container-column();
+
+  .container-space-between {
+    margin: 5px 0;
+    align-items: start;
+
+    .container-column {
+      width: 100%;
+    }
+  }
+
+  & h2 {
+    margin-top: 0;
+    margin-bottom: 15px !important;
+  }
+
+  h5 {
+    color: @secondary-color-dark;
+    font-weight: normal;
+  }
+
+  h5, p {
+    margin: 0;
+  }
+
+  & button {
+    width: fit-content;
+    align-self: end;
+    margin-top: 30px;
+  }
+}
