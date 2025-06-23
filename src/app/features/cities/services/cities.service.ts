@@ -2,10 +2,12 @@ import { computed, inject, Injectable, Signal, signal, WritableSignal } from '@a
 import { map, Observable, tap } from 'rxjs';
 import { CitiesListResponse, CityDetails, PopulatedPlaceSummary } from '../models/city.model';
 import { CitiesApiService } from './cities.api.service';
+import { CitiesStorageService } from './cities-storage.service';
 
 @Injectable()
 export class CitiesService {
   private readonly api: CitiesApiService = inject(CitiesApiService);
+  private readonly storage: CitiesStorageService = inject(CitiesStorageService);
 
   private readonly _cities: WritableSignal<PopulatedPlaceSummary[]> = signal<PopulatedPlaceSummary[]>([]);
   private readonly _total: WritableSignal<number> = signal<number>(0);
@@ -41,6 +43,10 @@ export class CitiesService {
       languageCode,
       sort
     ).pipe(
+      map(response => ({
+        ...response,
+        data: this.storage.mergeCityList(response.data)
+      })),
       tap((res: CitiesListResponse) => this.processCityListResponse(res, offset))
     );
   }
@@ -63,8 +69,34 @@ export class CitiesService {
     languageCode: string
   ): Observable<CityDetails> {
     return this.api.getCityDetails(cityId, languageCode).pipe(
-      map(response => response.data)
+      map(response => {
+        const mergedData = this.storage.mergeWithApiData(response.data);
+        return {
+          ...mergedData,
+          dateOfFoundation: mergedData.dateOfFoundation
+            ? new Date(mergedData.dateOfFoundation)
+            : null
+        };
+      })
     );
+  }
+
+  // endregion
+
+  // region EDIT METHODS
+
+  public saveEditedCity(city: CityDetails): void {
+    this.storage.saveEditedCity(city);
+
+    const currentCities = this._cities();
+    const index = currentCities.findIndex(c => c.id === city.id);
+    if (index !== -1) {
+      this._cities.update(cities => {
+        const updated = [...cities];
+        updated[index] = { ...updated[index], ...city };
+        return updated;
+      });
+    }
   }
 
   // endregion
