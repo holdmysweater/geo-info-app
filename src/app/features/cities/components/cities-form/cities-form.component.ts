@@ -1,5 +1,5 @@
 import { Component, inject, signal, WritableSignal } from '@angular/core';
-import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import {
   TuiButton,
   TuiDateFormat,
@@ -48,13 +48,6 @@ export class CitiesFormComponent {
   protected readonly isLoading: WritableSignal<boolean> = signal<boolean>(true);
   protected readonly cityDetails: WritableSignal<CityDetails | undefined> = signal<CityDetails | undefined>(undefined);
 
-  // TODO FormGroup
-  protected readonly regionControl: FormControl<string | null> = new FormControl(null);
-  protected readonly populationControl: FormControl<number | null> = new FormControl(null);
-  protected readonly dateControl: FormControl<Date | null> = new FormControl(null);
-  protected readonly longitudeControl: FormControl<number | null> = new FormControl(null);
-  protected readonly latitudeControl: FormControl<number | null> = new FormControl(null);
-
   constructor() {
     this.loadCityDetails();
   }
@@ -74,28 +67,49 @@ export class CitiesFormComponent {
     });
   }
 
+  // region FORM
+
+  protected readonly cityForm = new FormGroup({
+    region: new FormControl<string | null>(null, Validators.required),
+    population: new FormControl<number | null>(null, Validators.required),
+    dateOfFoundation: new FormControl<Date | null>(null),
+    longitude: new FormControl<number | null>(null, Validators.required),
+    latitude: new FormControl<number | null>(null, Validators.required)
+  });
+
   private populateForm(city: CityDetails): void {
-    this.regionControl.setValue(city.region);
-    this.populationControl.setValue(city.population);
-    this.dateControl.setValue(city.dateOfFoundation ?? null);
-    this.longitudeControl.setValue(city.longitude);
-    this.latitudeControl.setValue(city.latitude);
+    this.cityForm.patchValue({
+      region: city.region,
+      population: city.population,
+      dateOfFoundation: city.dateOfFoundation,
+      longitude: city.longitude,
+      latitude: city.latitude
+    });
   }
+
+  protected onSubmit() {
+    console.warn(this.cityForm.value);
+
+    this.closeDialog();
+  }
+
+  // endregion
+
+  // region DIALOG
 
   protected closeDialog(): void {
     this.context.completeWith();
   }
 
+  // endregion
+
   // region VALIDATION
 
-  // TODO separators based on localization
   protected readonly numberFormat: Partial<TuiNumberFormatSettings> = {
     precision: 9,
-    decimalSeparator: '.',
-    thousandSeparator: ','
+    decimalSeparator: this.langService.decimalSeparator(),
+    thousandSeparator: this.langService.thousandSeparator()
   };
-
-  // TODO validations for fields
 
   // endregion
 }
