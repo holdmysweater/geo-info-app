@@ -69,15 +69,7 @@ export class CitiesService {
     languageCode: string
   ): Observable<CityDetails> {
     return this.api.getCityDetails(cityId, languageCode).pipe(
-      map(response => {
-        const mergedData = this.storage.mergeWithApiData(response.data);
-        return {
-          ...mergedData,
-          dateOfFoundation: mergedData.dateOfFoundation
-            ? new Date(mergedData.dateOfFoundation)
-            : null
-        };
-      })
+      map(response => this.storage.mergeWithApiData(response.data))
     );
   }
 
@@ -97,6 +89,24 @@ export class CitiesService {
         return updated;
       });
     }
+  }
+
+  public savePartialCityEdits(id: number, partialData: Partial<CityDetails>): void {
+    const existingEdited = this.storage.getEditedCity(id);
+    const existingData = existingEdited || this._cities().find(c => c.id === id);
+
+    if (!existingData) {
+      console.warn(`City with ID ${ id } not found`);
+      return;
+    }
+
+    const updatedCity = {
+      ...existingData,
+      ...partialData,
+      id
+    } as CityDetails;
+
+    this.saveEditedCity(updatedCity);
   }
 
   // endregion

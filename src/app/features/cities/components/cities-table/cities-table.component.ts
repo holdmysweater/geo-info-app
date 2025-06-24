@@ -81,7 +81,7 @@ export class CitiesTableComponent {
     size: 'm'
   });
 
-  protected showFormDialog(id: string): void {
+  protected showFormDialog(id: number): void {
     this.formDialog(id).subscribe();
   }
 
