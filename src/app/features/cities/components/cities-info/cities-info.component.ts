@@ -7,6 +7,7 @@ import { CityDetails } from '../../models/city.model';
 import { CitiesService } from '../../services/cities.service';
 import { InternationalizationService } from '../../../../shared/services/internationalization.service';
 import { TranslocoDirective } from '@jsverse/transloco';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-cities-info',
@@ -16,7 +17,8 @@ import { TranslocoDirective } from '@jsverse/transloco';
     TuiInputModule,
     TuiButton,
     TuiLoader,
-    TranslocoDirective
+    TranslocoDirective,
+    DatePipe
   ],
   templateUrl: './cities-info.component.html',
   styleUrl: './cities-info.component.less'

@@ -23,7 +23,13 @@
           </div>
           <div class="container-column">
             <h5>{{ t('cities-table.foundation-date') }}</h5>
-            <p>{{ cityDetails()!.dateOfFoundation ?? '-' }}</p>
+            <p>
+              {{
+                cityDetails()?.dateOfFoundation ?
+                  (cityDetails()!.dateOfFoundation | date:'dd-MM-yyyy') :
+                  '-'
+              }}
+            </p>
           </div>
         </div>
         <div class="container-space-between">
