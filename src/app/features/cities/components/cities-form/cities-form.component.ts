@@ -18,6 +18,7 @@ import { InternationalizationService } from '../../../../shared/services/interna
 import { CityDetails } from '../../models/city.model';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { TuiInputNumberDirective } from '@taiga-ui/kit';
+import { TuiDay } from '@taiga-ui/cdk';
 
 @Component({
   selector: 'app-cities-form',
@@ -43,7 +44,7 @@ export class CitiesFormComponent {
   private readonly citiesService: CitiesService = inject(CitiesService);
   private readonly langService: InternationalizationService = inject(InternationalizationService);
 
-  public readonly context: TuiDialogContext<void, string> = injectContext<TuiDialogContext<void, string>>();
+  public readonly context: TuiDialogContext<void, number> = injectContext<TuiDialogContext<void, number>>();
 
   protected readonly isLoading: WritableSignal<boolean> = signal<boolean>(true);
   protected readonly cityDetails: WritableSignal<CityDetails | undefined> = signal<CityDetails | undefined>(undefined);
@@ -55,7 +56,7 @@ export class CitiesFormComponent {
   private loadCityDetails(): void {
     this.isLoading.set(true);
     this.citiesService.fetchCityDetails(
-      this.context.data ?? '',
+      this.context.data.toString(),
       this.langService.language()
     ).subscribe({
       next: (city: CityDetails) => {
@@ -72,23 +73,46 @@ export class CitiesFormComponent {
   protected readonly cityForm = new FormGroup({
     region: new FormControl<string | null>(null, Validators.required),
     population: new FormControl<number | null>(null, Validators.required),
-    dateOfFoundation: new FormControl<Date | null>(null),
+    dateOfFoundation: new FormControl<TuiDay | null>(null),
     longitude: new FormControl<number | null>(null, Validators.required),
     latitude: new FormControl<number | null>(null, Validators.required)
   });
 
   private populateForm(city: CityDetails): void {
+    let foundationDate: TuiDay | null = null;
+
+    if (city.dateOfFoundation) {
+      const date = new Date(city.dateOfFoundation);
+      foundationDate = new TuiDay(date.getFullYear(), date.getMonth(), date.getDate());
+    }
+
     this.cityForm.patchValue({
       region: city.region,
       population: city.population,
-      dateOfFoundation: city.dateOfFoundation,
+      dateOfFoundation: foundationDate,
       longitude: city.longitude,
       latitude: city.latitude
     });
   }
 
   protected onSubmit() {
-    console.warn(this.cityForm.value);
+    if (this.cityForm.invalid) return;
+
+    const formValue = this.cityForm.value;
+    let dateOfFoundation: string | null = null;
+
+    if (formValue.dateOfFoundation) {
+      const { year, month, day } = formValue.dateOfFoundation;
+      dateOfFoundation = new Date(year, month, day).toISOString();
+    }
+
+    this.citiesService.savePartialCityEdits(this.context.data, {
+      region: formValue.region ?? undefined,
+      population: formValue.population ?? undefined,
+      dateOfFoundation,
+      longitude: formValue.longitude ?? undefined,
+      latitude: formValue.latitude ?? undefined
+    });
 
     this.closeDialog();
   }
@@ -110,6 +134,8 @@ export class CitiesFormComponent {
     decimalSeparator: this.langService.decimalSeparator(),
     thousandSeparator: this.langService.thousandSeparator()
   };
+
+  protected readonly maxDate = TuiDay.currentLocal();
 
   // endregion
 }
