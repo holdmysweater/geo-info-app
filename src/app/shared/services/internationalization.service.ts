@@ -1,6 +1,7 @@
-import { effect, inject, Injectable, Signal, signal, WritableSignal } from '@angular/core';
+import { computed, effect, inject, Injectable, Signal, signal, WritableSignal } from '@angular/core';
 import { TranslocoService } from '@jsverse/transloco';
 import { take } from 'rxjs';
+import { TuiDecimalSymbol } from '@taiga-ui/core';
 
 @Injectable({ providedIn: 'root' })
 export class InternationalizationService {
@@ -28,6 +29,18 @@ export class InternationalizationService {
       this._language.set(lang);
     }
   }
+
+  // endregion
+
+  // region DECIMAL SEPARATORS
+
+  public readonly decimalSeparator: Signal<TuiDecimalSymbol> = computed(() => {
+    return this.language() === 'ru' ? ',' : '.';
+  });
+
+  public readonly thousandSeparator: Signal<string> = computed(() => {
+    return this.language() === 'ru' ? ' ' : ' ';
+  });
 
   // endregion
 }
