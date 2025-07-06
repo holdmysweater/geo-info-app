@@ -13,7 +13,7 @@ import { QueryParametersService } from '../../services/query-parameters.service'
   ],
   templateUrl: './language-settings.component.html'
 })
-export class LanguageSettings {
+export class LanguageSettingsComponent {
   protected readonly langService: InternationalizationService = inject(InternationalizationService);
   private readonly queryService: QueryParametersService = inject(QueryParametersService);
 

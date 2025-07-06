@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
 import { TuiTitle } from '@taiga-ui/core';
-import { LanguageSettings } from '../language-settings/language-settings.component';
+import { LanguageSettingsComponent } from '../language-settings/language-settings.component';
 import { translateSignal } from '@jsverse/transloco';
 
 @Component({
   selector: 'app-header',
   imports: [
     TuiTitle,
-    LanguageSettings
+    LanguageSettingsComponent
   ],
   templateUrl: './header.component.html'
 })
