@@ -36,13 +36,13 @@ export class CountriesService {
   ): Observable<CountryListResponse> {
     if (pageItemsLimit) this._pageItemsLimit.set(pageItemsLimit);
 
-    return this.api.getCountries(
+    return this.api.getCountries({
       offset,
-      this._pageItemsLimit(),
+      limit: this._pageItemsLimit(),
       namePrefix,
       languageCode,
       sort
-    ).pipe(
+    }).pipe(
       tap((res: CountryListResponse) => this.processCountryListResponse(res, offset))
     );
   }
@@ -61,7 +61,7 @@ export class CountriesService {
 
   public fetchCountryDetails(
     countryId: string,
-    languageCode: string
+    languageCode: string = 'en'
   ): Observable<CountryDetails> {
     return this.api.getCountryDetails(countryId, languageCode).pipe(
       map(response => response.data)

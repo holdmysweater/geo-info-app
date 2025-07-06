@@ -34,3 +34,18 @@ export interface CountryDetails {
   numRegions: number;
   wikiDataId: string;
 }
+
+export interface CountryListParams {
+  offset: number;
+  limit: number;
+  namePrefix?: string;
+  languageCode?: string;
+  sort?: string;
+}
+
+export const defaultCountryParams: Partial<CountryListParams> = {
+  namePrefix: '',
+  languageCode: 'en',
+  sort: 'name',
+  offset: 0
+};
