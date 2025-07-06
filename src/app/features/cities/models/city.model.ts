@@ -55,3 +55,18 @@ export interface CityDetails {
   dateOfFoundation?: string | null;
 }
 
+export interface CityListParams {
+  countryIds: string;
+  offset: number;
+  limit: number;
+  namePrefix?: string;
+  languageCode?: string;
+  sort?: string;
+}
+
+export const defaultCityParams: Partial<CityListParams> = {
+  namePrefix: '',
+  languageCode: 'en',
+  sort: 'name',
+  offset: 0
+};

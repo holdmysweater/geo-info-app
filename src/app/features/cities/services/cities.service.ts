@@ -35,14 +35,14 @@ export class CitiesService {
   ): Observable<CitiesListResponse> {
     if (pageItemsLimit) this._pageItemsLimit.set(pageItemsLimit);
 
-    return this.api.getCities(
-      wikiId,
+    return this.api.getCities({
+      countryIds: wikiId,
       offset,
-      this._pageItemsLimit(),
+      limit: this._pageItemsLimit(),
       namePrefix,
       languageCode,
       sort
-    ).pipe(
+    }).pipe(
       map(response => ({
         ...response,
         data: this.storage.mergeCityList(response.data)
@@ -66,7 +66,7 @@ export class CitiesService {
 
   public fetchCityDetails(
     cityId: string,
-    languageCode: string
+    languageCode: string = 'en'
   ): Observable<CityDetails> {
     return this.api.getCityDetails(cityId, languageCode).pipe(
       map(response => this.storage.mergeWithApiData(response.data))
