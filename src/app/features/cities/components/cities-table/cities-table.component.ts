@@ -30,7 +30,7 @@ export class CitiesTableComponent {
   private readonly langService: InternationalizationService = inject(InternationalizationService);
 
   public readonly searchParameters: InputSignal<string> = input<string>('');
-  public readonly countryWikiIdParameter: InputSignal<string | null> = input<string | null>('');
+  public readonly countryWikiIdParameter: InputSignal<string | null> = input<string | null>(null);
 
   protected readonly isLoading: WritableSignal<boolean> = signal(true);
   protected readonly cities: Signal<PopulatedPlaceSummary[]> = this.citiesService.cities;
@@ -38,6 +38,8 @@ export class CitiesTableComponent {
   constructor() {
     // Update cities list
     effect(() => {
+      if (null === this.countryWikiIdParameter()) return;
+
       this.isLoading.set(true);
 
       const sub = this.citiesService.fetchPage(

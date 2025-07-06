@@ -47,7 +47,7 @@ export class CitiesComponent {
   protected readonly searchFormControl: FormControl<string | null> = new FormControl('');
 
   protected readonly wikiIdParam: InputSignal<string> = input('', { alias: 'country' });
-  protected readonly countryWikiId: WritableSignal<string> = signal<string>('');
+  protected readonly countryWikiId: WritableSignal<string | null> = signal<string | null>('');
 
   protected readonly countryDropdownSearchInput: WritableSignal<string | null> = signal(null);
   protected readonly countryDropdownDisplayValue: FormControl<string | null> = new FormControl(null);
@@ -83,9 +83,11 @@ export class CitiesComponent {
     effect(() => {
       if (undefined == this.wikiIdParam()) return;
 
+      this.countryWikiId.set(null);
+
       this.countriesService.fetchCountryDetails(
         this.wikiIdParam(),
-        this.langService.language()
+        this.langService.language(),
       ).subscribe({
         next: (value) => {
           this.countryDropdownDisplayValue.setValue(value.name, { emitEvent: false });
