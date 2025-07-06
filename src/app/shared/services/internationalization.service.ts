@@ -24,7 +24,7 @@ export class InternationalizationService {
 
   public readonly language: Signal<string> = this._language.asReadonly();
 
-  setLanguage(lang: string): void {
+  public setLanguage(lang: string): void {
     if (this.languageOptions.includes(lang as any)) {
       this._language.set(lang);
     }

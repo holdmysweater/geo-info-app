@@ -19,7 +19,7 @@ export class CountriesService {
   public readonly currentOffset: Signal<number> = this._currentOffset.asReadonly();
   public readonly pageItemsLimit: Signal<number> = this._pageItemsLimit.asReadonly();
 
-  public readonly pageCount = computed(() =>
+  public readonly pageCount: Signal<number> = computed(() =>
     Math.ceil(this._total() / this._pageItemsLimit())
   );
 

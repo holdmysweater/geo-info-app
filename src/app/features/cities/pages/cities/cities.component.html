@@ -16,8 +16,8 @@
         <tui-data-list-wrapper
           *tuiTextfieldDropdown
           new
-          [emptyContent]="null === countries ? t('search.in-progress') : t('search.no-results')"
-          [items]="null === countries ? null : Array.from(countries().keys())"
+          [emptyContent]="null === countries() ? t('search.in-progress') : t('search.no-results')"
+          [items]="null === countries() ? null : Array.from(countries().keys())"
         />
       </tui-textfield>
 

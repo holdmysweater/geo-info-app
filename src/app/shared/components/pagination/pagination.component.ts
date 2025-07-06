@@ -24,7 +24,7 @@ export class PaginationComponent {
     effect(() => {
       this.queryService.update({
         page: this.paginationService.currentPage() + 1
-      }).then();
+      });
     });
   }
 }

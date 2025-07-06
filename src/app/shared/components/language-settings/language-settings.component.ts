@@ -37,7 +37,7 @@ export class LanguageSettingsComponent {
       this.langService.setLanguage(value ?? '');
       this.queryService.update({
         lang: this.langService.language()
-      }).then();
+      });
     });
   }
 }

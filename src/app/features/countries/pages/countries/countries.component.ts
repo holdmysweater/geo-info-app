@@ -37,7 +37,7 @@ export class CountriesComponent {
       this.searchFormControl.setValue(this.searchParam(), { emitEvent: false });
       this.queryParamsService.update({
         search: this.searchParam(),
-      }).then();
+      });
     });
 
     // Update search - Input to URL
@@ -45,7 +45,7 @@ export class CountriesComponent {
       this.queryParamsService.update({
         search: value,
         page: 1
-      }).then();
+      });
     });
   }
 }

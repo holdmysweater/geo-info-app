@@ -29,10 +29,10 @@ export class CitiesTableComponent {
   private readonly paginationService = inject(PaginationService);
   private readonly langService: InternationalizationService = inject(InternationalizationService);
 
-  public searchParameters: InputSignal<string> = input<string>('');
-  public countryWikiIdParameter: InputSignal<string | null> = input<string | null>('');
+  public readonly searchParameters: InputSignal<string> = input<string>('');
+  public readonly countryWikiIdParameter: InputSignal<string | null> = input<string | null>('');
 
-  protected isLoading: WritableSignal<boolean> = signal(true);
+  protected readonly isLoading: WritableSignal<boolean> = signal(true);
   protected readonly cities: Signal<PopulatedPlaceSummary[]> = this.citiesService.cities;
 
   constructor() {

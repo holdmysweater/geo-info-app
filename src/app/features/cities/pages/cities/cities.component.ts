@@ -43,11 +43,11 @@ export class CitiesComponent {
   private readonly langService: InternationalizationService = inject(InternationalizationService);
   protected readonly Array = Array;
 
-  protected searchParam: InputSignal<string> = input('', { alias: 'search' });
+  protected readonly searchParam: InputSignal<string> = input('', { alias: 'search' });
   protected readonly searchFormControl: FormControl<string | null> = new FormControl('');
 
-  protected wikiIdParam: InputSignal<string> = input('', { alias: 'country' });
-  protected countryWikiId: WritableSignal<string> = signal<string>('');
+  protected readonly wikiIdParam: InputSignal<string> = input('', { alias: 'country' });
+  protected readonly countryWikiId: WritableSignal<string> = signal<string>('');
 
   protected readonly countryDropdownSearchInput: WritableSignal<string | null> = signal(null);
   protected readonly countryDropdownDisplayValue: FormControl<string | null> = new FormControl(null);
@@ -68,7 +68,7 @@ export class CitiesComponent {
       this.searchFormControl.setValue(this.searchParam(), { emitEvent: false });
       this.queryService.update({
         search: this.searchParam(),
-      }).then();
+      });
     });
 
     // Update search - Input to URL
@@ -76,7 +76,7 @@ export class CitiesComponent {
       this.queryService.update({
         search: value,
         page: 1
-      }).then();
+      });
     });
 
     // Update dropdown input - URL to Input
@@ -92,12 +92,12 @@ export class CitiesComponent {
           this.countryWikiId.set(value.wikiDataId);
           this.queryService.update({
             country: value.wikiDataId,
-          }).then();
+          });
         },
         error: () => {
           this.queryService.update({
             country: '',
-          }).then();
+          });
         }
       });
     });
@@ -109,7 +109,7 @@ export class CitiesComponent {
       this.queryService.update({
         country: this.countries()?.get(value ?? '') ?? '',
         page: 1
-      }).then();
+      });
     });
   }
 

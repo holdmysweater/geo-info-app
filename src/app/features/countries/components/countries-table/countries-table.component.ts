@@ -30,9 +30,9 @@ export class CountriesTableComponent {
   private readonly paginationService: PaginationService = inject(PaginationService);
   protected readonly langService: InternationalizationService = inject(InternationalizationService);
 
-  public searchParameters: InputSignal<string | undefined> = input<string>();
+  public readonly searchParameters: InputSignal<string> = input<string>('');
 
-  protected isLoading: WritableSignal<boolean> = signal(true);
+  protected readonly isLoading: WritableSignal<boolean> = signal(true);
   protected readonly countries: Signal<CountrySummary[]> = this.countriesService.countries;
 
   constructor() {
