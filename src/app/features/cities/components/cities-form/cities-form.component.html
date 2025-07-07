@@ -1,138 +1,134 @@
 <ng-container *transloco="let t">
   <div class="dialog-container">
-    @if (isLoading()) {
-      <tui-loader/>
-    } @else if (cityDetails()) {
-      <h2>{{ cityDetails()!.name }}</h2>
+    <h2>{{ city!.name }}</h2>
 
-      <form
-        [formGroup]="cityForm"
-        (ngSubmit)="onSubmit()"
-      >
-        <div class="container-column">
-          <div class="container-space-between">
-            <div class="container-column">
-              <tui-textfield>
-                <label
-                  for="region"
-                  tuiLabel
-                >
-                  {{ t('cities-table.region') }}
-                </label>
-                <input
-                  id="region"
-                  formControlName="region"
-                  tuiTextfield
-                />
-              </tui-textfield>
-            </div>
-          </div>
-
-          <div class="container-space-between">
-            <div class="container-column">
-              <tui-textfield>
-                <label
-                  for="population"
-                  tuiLabel
-                >
-                  {{ t('cities-table.population') }}
-                </label>
-                <input
-                  id="population"
-                  formControlName="population"
-                  tuiInputNumber
-                  [tuiNumberFormat]="numberFormat"
-                  [min]="1"
-                />
-              </tui-textfield>
-            </div>
-
-            <div
-              class="container-column wrapper tui-space_top-3"
-              [tuiDateFormat]="{mode: 'DMY'}"
-            >
-              <tui-input-date
-                formControlName="dateOfFoundation"
-                [tuiDateFormat]="{separator: '-'}"
-                [max]="maxDate"
+    <form
+      [formGroup]="cityForm"
+      (ngSubmit)="onSubmit()"
+    >
+      <div class="container-column">
+        <div class="container-space-between">
+          <div class="container-column">
+            <tui-textfield>
+              <label
+                for="region"
+                tuiLabel
               >
-                <label
-                  for="dateOfFoundation"
-                  tuiLabel
-                >
-                  {{ t('cities-table.foundation-date') }}
-                </label>
-                <input
-                  id="dateOfFoundation"
-                  formControlName="dateOfFoundation"
-                  tuiTextfieldLegacy
-                />
-              </tui-input-date>
-            </div>
-          </div>
-
-          <div class="container-space-between">
-            <div class="container-column">
-              <tui-textfield>
-                <label
-                  for="longitude"
-                  tuiLabel
-                >
-                  {{ t('cities-table.longitude') }}
-                </label>
-                <input
-                  id="longitude"
-                  formControlName="longitude"
-                  tuiInputNumber
-                  [tuiNumberFormat]="numberFormat"
-                  [min]="-180"
-                  [max]="180"
-                />
-              </tui-textfield>
-            </div>
-
-            <div class="container-column">
-              <tui-textfield>
-                <label
-                  for="latitude"
-                  tuiLabel
-                >
-                  {{ t('cities-table.latitude') }}
-                </label>
-                <input
-                  id="latitude"
-                  formControlName="latitude"
-                  tuiInputNumber
-                  [tuiNumberFormat]="numberFormat"
-                  [min]="-90"
-                  [max]="90"
-                />
-              </tui-textfield>
-            </div>
+                {{ t('cities-table.region') }}
+              </label>
+              <input
+                id="region"
+                formControlName="region"
+                tuiTextfield
+              />
+            </tui-textfield>
           </div>
         </div>
 
-        <div class="container-end">
-          <button
-            [size]="'m'"
-            appearance="flat-destructive"
-            tuiButton
-            (click)="closeDialog()"
-          >
-            {{ t('actions.cancel') }}
-          </button>
+        <div class="container-space-between">
+          <div class="container-column">
+            <tui-textfield>
+              <label
+                for="population"
+                tuiLabel
+              >
+                {{ t('cities-table.population') }}
+              </label>
+              <input
+                id="population"
+                formControlName="population"
+                tuiInputNumber
+                [tuiNumberFormat]="numberFormat"
+                [min]="1"
+              />
+            </tui-textfield>
+          </div>
 
-          <button
-            type="submit"
-            [disabled]="!cityForm.valid"
-            [size]="'m'"
-            appearance="primary"
-            tuiButton
+          <div
+            class="container-column wrapper tui-space_top-3"
+            [tuiDateFormat]="{mode: 'DMY'}"
           >
-            {{ t('actions.save') }}
-          </button>
+            <tui-input-date
+              formControlName="dateOfFoundation"
+              [tuiDateFormat]="{separator: '-'}"
+              [max]="maxDate"
+            >
+              <label
+                for="dateOfFoundation"
+                tuiLabel
+              >
+                {{ t('cities-table.foundation-date') }}
+              </label>
+              <input
+                id="dateOfFoundation"
+                formControlName="dateOfFoundation"
+                tuiTextfieldLegacy
+              />
+            </tui-input-date>
+          </div>
         </div>
-      </form>
-    }
+
+        <div class="container-space-between">
+          <div class="container-column">
+            <tui-textfield>
+              <label
+                for="longitude"
+                tuiLabel
+              >
+                {{ t('cities-table.longitude') }}
+              </label>
+              <input
+                id="longitude"
+                formControlName="longitude"
+                tuiInputNumber
+                [tuiNumberFormat]="numberFormat"
+                [min]="-180"
+                [max]="180"
+              />
+            </tui-textfield>
+          </div>
+
+          <div class="container-column">
+            <tui-textfield>
+              <label
+                for="latitude"
+                tuiLabel
+              >
+                {{ t('cities-table.latitude') }}
+              </label>
+              <input
+                id="latitude"
+                formControlName="latitude"
+                tuiInputNumber
+                [tuiNumberFormat]="numberFormat"
+                [min]="-90"
+                [max]="90"
+              />
+            </tui-textfield>
+          </div>
+        </div>
+      </div>
+
+      <div class="container-end">
+        <button
+          [size]="'m'"
+          appearance="flat-destructive"
+          tuiButton
+          (click)="closeDialog()"
+        >
+          {{ t('actions.cancel') }}
+        </button>
+
+        <button
+          type="submit"
+          [disabled]="!cityForm.valid"
+          [size]="'m'"
+          appearance="primary"
+          tuiButton
+        >
+          {{ t('actions.save') }}
+        </button>
+      </div>
+    </form>
   </div>
 </ng-container>

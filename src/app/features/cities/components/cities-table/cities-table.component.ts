@@ -69,8 +69,8 @@ export class CitiesTableComponent {
     size: 's'
   });
 
-  protected showInfoDialog(id: string): void {
-    this.infoDialog(id).subscribe();
+  protected showInfoDialog(city: PopulatedPlaceSummary): void {
+    this.infoDialog(city).subscribe();
   }
 
   // endregion
@@ -83,8 +83,8 @@ export class CitiesTableComponent {
     size: 'm'
   });
 
-  protected showFormDialog(id: number): void {
-    this.formDialog(id).subscribe();
+  protected showFormDialog(city: PopulatedPlaceSummary): void {
+    this.formDialog(city).subscribe();
   }
 
   // endregion

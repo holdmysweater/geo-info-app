@@ -1,6 +1,6 @@
 import { computed, inject, Injectable, Signal, signal, WritableSignal } from '@angular/core';
 import { map, Observable, tap } from 'rxjs';
-import { CitiesListResponse, CityDetails, PopulatedPlaceSummary } from '../models/city.model';
+import { CitiesListResponse, PopulatedPlaceSummary } from '../models/city.model';
 import { CitiesApiService } from './cities.api.service';
 import { CitiesStorageService } from './cities-storage.service';
 
@@ -64,20 +64,11 @@ export class CitiesService {
     return this.fetchCities(wikiId, namePrefix, languageCode, sort, undefined, offset);
   }
 
-  public fetchCityDetails(
-    cityId: string,
-    languageCode: string = 'en'
-  ): Observable<CityDetails> {
-    return this.api.getCityDetails(cityId, languageCode).pipe(
-      map(response => this.storage.mergeWithApiData(response.data))
-    );
-  }
-
   // endregion
 
   // region EDIT METHODS
 
-  public saveEditedCity(city: CityDetails): void {
+  public saveEditedCity(city: Partial<PopulatedPlaceSummary>): void {
     this.storage.saveEditedCity(city);
 
     const currentCities = this._cities();
@@ -91,7 +82,7 @@ export class CitiesService {
     }
   }
 
-  public savePartialCityEdits(id: number, partialData: Partial<CityDetails>): void {
+  public savePartialCityEdits(id: number, partialData: Partial<PopulatedPlaceSummary>): void {
     const existingEdited = this.storage.getEditedCity(id);
     const existingData = existingEdited || this._cities().find(c => c.id === id);
 
@@ -104,7 +95,7 @@ export class CitiesService {
       ...existingData,
       ...partialData,
       id
-    } as CityDetails;
+    } as PopulatedPlaceSummary;
 
     this.saveEditedCity(updatedCity);
   }

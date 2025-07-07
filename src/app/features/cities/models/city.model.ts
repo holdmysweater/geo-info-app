@@ -3,7 +3,7 @@ export interface CitiesListLink {
   href: string;
 }
 
-export interface PopulatedPlaceBase {
+export interface PopulatedPlaceSummary {
   id: number;
   wikiDataId: string;
   type: 'ADM2' | 'CITY' | 'ISLAND';
@@ -17,16 +17,6 @@ export interface PopulatedPlaceBase {
   latitude: number;
   longitude: number;
   population: number;
-}
-
-export interface PopulatedPlaceSummary extends PopulatedPlaceBase {
-  distance?: number;
-}
-
-export interface CityDetails extends PopulatedPlaceBase {
-  elevationMeters: number;
-  timezone: string;
-  deleted: boolean;
   dateOfFoundation?: string | null;
 }
 
@@ -42,7 +32,7 @@ export interface CitiesListResponse {
 }
 
 export interface CityDetailsResponse {
-  data: CityDetails;
+  data: PopulatedPlaceSummary;
 }
 
 export interface CityListParams {

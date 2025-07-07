@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { CityDetails, PopulatedPlaceSummary } from '../models/city.model';
+import { PopulatedPlaceSummary } from '../models/city.model';
 
 @Injectable({ providedIn: 'root' })
 export class CitiesStorageService {
   private readonly STORAGE_KEY = 'editedCities';
 
-  private get storage(): Record<number, Partial<CityDetails>> {
+  private get storage(): Record<number, Partial<PopulatedPlaceSummary>> {
     try {
       const storedData = localStorage.getItem(this.STORAGE_KEY);
       return storedData ? JSON.parse(storedData) : {};
@@ -17,11 +17,11 @@ export class CitiesStorageService {
 
   // region EDITED CITY
 
-  public getEditedCity(id: number): Partial<CityDetails> | null {
+  public getEditedCity(id: number): Partial<PopulatedPlaceSummary> | null {
     return this.storage[id] || null;
   }
 
-  public saveEditedCity(city: Partial<CityDetails>): void {
+  public saveEditedCity(city: Partial<PopulatedPlaceSummary>): void {
     if (!city.id) return;
 
     const cities = this.storage;
@@ -40,7 +40,7 @@ export class CitiesStorageService {
 
   // region MERGE
 
-  public mergeWithApiData(apiCity: CityDetails): CityDetails {
+  public mergeWithApiData(apiCity: PopulatedPlaceSummary): PopulatedPlaceSummary {
     const editedCity = this.getEditedCity(apiCity.id);
     return editedCity ? { ...apiCity, ...editedCity } : apiCity;
   }

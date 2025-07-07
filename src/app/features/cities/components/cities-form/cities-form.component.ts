@@ -1,11 +1,10 @@
-import { Component, inject, signal, WritableSignal } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import {
   TuiButton,
   TuiDateFormat,
   TuiDialogContext,
   TuiLabel,
-  TuiLoader,
   TuiNumberFormat,
   TuiNumberFormatSettings,
   TuiTextfieldComponent,
@@ -15,11 +14,10 @@ import { TuiInputDateModule, TuiInputModule } from "@taiga-ui/legacy";
 import { injectContext } from "@taiga-ui/polymorpheus";
 import { CitiesService } from '../../services/cities.service';
 import { InternationalizationService } from '../../../../shared/services/internationalization.service';
-import { CityDetails } from '../../models/city.model';
+import { PopulatedPlaceSummary } from '../../models/city.model';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { TuiInputNumberDirective } from '@taiga-ui/kit';
 import { TuiDay } from '@taiga-ui/cdk';
-import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-cities-form',
@@ -29,7 +27,6 @@ import { finalize } from 'rxjs';
     TuiInputModule,
     FormsModule,
     TranslocoDirective,
-    TuiLoader,
     TuiInputDateModule,
     TuiTextfieldComponent,
     TuiNumberFormat,
@@ -45,28 +42,14 @@ export class CitiesFormComponent {
   private readonly citiesService: CitiesService = inject(CitiesService);
   private readonly langService: InternationalizationService = inject(InternationalizationService);
 
-  public readonly context: TuiDialogContext<void, number> = injectContext<TuiDialogContext<void, number>>();
-
-  protected readonly isLoading: WritableSignal<boolean> = signal<boolean>(true);
-  protected readonly cityDetails: WritableSignal<CityDetails | undefined> = signal<CityDetails | undefined>(undefined);
+  public readonly context: TuiDialogContext<void, PopulatedPlaceSummary> = injectContext();
 
   constructor() {
-    this.loadCityDetails();
+    this.populateForm(this.context.data);
   }
 
-  private loadCityDetails(): void {
-    this.isLoading.set(true);
-    this.citiesService.fetchCityDetails(
-      this.context.data.toString(),
-      this.langService.language()
-    ).pipe(
-      finalize(() => this.isLoading.set(false))
-    ).subscribe({
-      next: (city: CityDetails) => {
-        this.cityDetails.set(city);
-        this.populateForm(city);
-      }
-    });
+  protected get city(): PopulatedPlaceSummary {
+    return this.context.data;
   }
 
   // region FORM
@@ -79,7 +62,7 @@ export class CitiesFormComponent {
     latitude: new FormControl<number | null>(null, Validators.required)
   });
 
-  private populateForm(city: CityDetails): void {
+  private populateForm(city: PopulatedPlaceSummary): void {
     let foundationDate: TuiDay | null = null;
 
     if (city.dateOfFoundation) {
@@ -107,7 +90,7 @@ export class CitiesFormComponent {
       dateOfFoundation = new Date(year, month, day).toISOString();
     }
 
-    this.citiesService.savePartialCityEdits(this.context.data, {
+    this.citiesService.savePartialCityEdits(this.context.data.id, {
       region: formValue.region ?? undefined,
       population: formValue.population ?? undefined,
       dateOfFoundation,
