@@ -12,21 +12,25 @@
     }
   }
 
-  & h2 {
+  h2 {
     margin-top: 0;
     margin-bottom: 15px !important;
+    word-break: break-word;
   }
 
   h5 {
     color: @secondary-color-dark;
     font-weight: normal;
-  }
-
-  h5, p {
     margin: 0;
   }
 
-  & button {
+  p {
+    margin: 0;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+  }
+
+  button {
     width: fit-content;
     align-self: end;
     margin-top: 30px;
