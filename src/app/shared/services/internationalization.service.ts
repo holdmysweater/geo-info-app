@@ -7,6 +7,16 @@ import { TuiDecimalSymbol } from '@taiga-ui/core';
 export class InternationalizationService {
   private readonly translocoService: TranslocoService = inject(TranslocoService);
 
+  public readonly languageOptions: readonly [string, string] = ['ru', 'en'] as const;
+
+  private readonly _language: WritableSignal<string> = signal(
+    this.languageOptions.includes(localStorage.getItem('lang') as any)
+      ? localStorage.getItem('lang')!
+      : this.languageOptions[0]
+  );
+
+  public readonly language: Signal<string> = this._language.asReadonly();
+
   constructor() {
     // Update language in Transloco
     effect(() => {
@@ -14,15 +24,14 @@ export class InternationalizationService {
         .pipe(take(1))
         .subscribe(() => this.translocoService.setActiveLang(this.language()));
     });
+
+    // Save language to localStorage on change
+    effect(() => {
+      localStorage.setItem('lang', this.language());
+    });
   }
 
   // region LANGUAGE
-
-  public readonly languageOptions: readonly [string, string] = ['ru', 'en'] as const;
-
-  private readonly _language: WritableSignal<string> = signal(this.languageOptions[0]);
-
-  public readonly language: Signal<string> = this._language.asReadonly();
 
   public setLanguage(lang: string): void {
     if (this.languageOptions.includes(lang as any)) {

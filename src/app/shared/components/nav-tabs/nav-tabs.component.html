@@ -5,13 +5,6 @@
       type="button"
       routerLinkActive="active"
       [routerLink]="tab.url"
-      [queryParams]="{ lang: langService.language() }"
-      [routerLinkActiveOptions]="{
-        paths: 'exact',
-        queryParams: 'ignored',
-        matrixParams: 'ignored',
-        fragment: 'ignored'
-      }"
     >
       {{ tab.label() }}
     </a>

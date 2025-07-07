@@ -2,7 +2,6 @@ import { Component, effect, inject } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TuiRadioList } from '@taiga-ui/kit';
 import { InternationalizationService } from '../../services/internationalization.service';
-import { QueryParametersService } from '../../services/query-parameters.service';
 
 @Component({
   selector: 'app-language-settings',
@@ -15,7 +14,6 @@ import { QueryParametersService } from '../../services/query-parameters.service'
 })
 export class LanguageSettingsComponent {
   protected readonly langService: InternationalizationService = inject(InternationalizationService);
-  private readonly queryService: QueryParametersService = inject(QueryParametersService);
 
   protected readonly languageFormControl: FormControl<string | null> = new FormControl('');
 
@@ -25,19 +23,9 @@ export class LanguageSettingsComponent {
       this.languageFormControl.setValue(this.langService.language(), { emitEvent: false });
     });
 
-    // Update language - URL to Service
-    this.queryService.watchParam('lang').subscribe((value: string | null) => {
-      this.langService.setLanguage(value ?? '');
-    });
-
-    // Update language - Service to URL
+    // Update language - Input to Service
     this.languageFormControl.valueChanges.subscribe((value: string | null) => {
-      console.log('language-settings.component.ts: changed value to \"' + value + '\"');
-
       this.langService.setLanguage(value ?? '');
-      this.queryService.update({
-        lang: this.langService.language()
-      });
     });
   }
 }
