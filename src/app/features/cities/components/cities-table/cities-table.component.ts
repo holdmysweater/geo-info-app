@@ -8,6 +8,7 @@ import { CitiesService } from '../../services/cities.service';
 import { TuiButton, tuiDialog, TuiIcon, TuiLoader } from '@taiga-ui/core';
 import { CitiesInfoComponent } from '../cities-info/cities-info.component';
 import { CitiesFormComponent } from '../cities-form/cities-form.component';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-cities-table',
@@ -47,10 +48,9 @@ export class CitiesTableComponent {
         this.paginationService.currentPage(),
         this.searchParameters(),
         this.langService.language()
-      ).subscribe({
-        next: () => this.isLoading.set(false),
-        error: () => this.isLoading.set(false)
-      });
+      ).pipe(
+        finalize(() => this.isLoading.set(false))
+      ).subscribe();
 
       return () => sub.unsubscribe();
     });

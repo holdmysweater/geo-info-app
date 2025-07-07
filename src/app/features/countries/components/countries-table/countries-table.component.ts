@@ -8,6 +8,7 @@ import { TranslocoDirective } from '@jsverse/transloco';
 import { PaginationService } from '../../../../shared/services/pagination.service';
 import { InternationalizationService } from '../../../../shared/services/internationalization.service';
 import { CountriesService } from '../../services/countries.service';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-countries-table',
@@ -44,10 +45,9 @@ export class CountriesTableComponent {
         this.paginationService.currentPage(),
         this.searchParameters(),
         this.langService.language()
-      ).subscribe({
-        next: () => this.isLoading.set(false),
-        error: () => this.isLoading.set(false)
-      });
+      ).pipe(
+        finalize(() => this.isLoading.set(false))
+      ).subscribe();
     });
 
     // Update total page count in pagination service

@@ -8,6 +8,7 @@ import { CitiesService } from '../../services/cities.service';
 import { InternationalizationService } from '../../../../shared/services/internationalization.service';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { DatePipe } from '@angular/common';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-cities-info',
@@ -38,16 +39,19 @@ export class CitiesInfoComponent {
 
   private loadCityDetails(): void {
     this.isLoading.set(true);
-    this.citiesService.fetchCityDetails(this.context.data ?? '', this.langService.language()).subscribe({
+    this.citiesService.fetchCityDetails(
+      this.context.data ?? '',
+      this.langService.language()
+    ).pipe(
+      finalize(() => this.isLoading.set(false))
+    ).subscribe({
       next: (city: CityDetails) => {
         const updatedCity: CityDetails = {
           ...city,
           dateOfFoundation: city.dateOfFoundation ?? null
         };
         this.cityDetails.set(updatedCity);
-        this.isLoading.set(false);
-      },
-      error: () => this.isLoading.set(false)
+      }
     });
   }
 

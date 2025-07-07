@@ -19,6 +19,7 @@ import { CityDetails } from '../../models/city.model';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { TuiInputNumberDirective } from '@taiga-ui/kit';
 import { TuiDay } from '@taiga-ui/cdk';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-cities-form',
@@ -58,13 +59,13 @@ export class CitiesFormComponent {
     this.citiesService.fetchCityDetails(
       this.context.data.toString(),
       this.langService.language()
+    ).pipe(
+      finalize(() => this.isLoading.set(false))
     ).subscribe({
       next: (city: CityDetails) => {
         this.cityDetails.set(city);
         this.populateForm(city);
-        this.isLoading.set(false);
-      },
-      error: () => this.isLoading.set(false)
+      }
     });
   }
 
