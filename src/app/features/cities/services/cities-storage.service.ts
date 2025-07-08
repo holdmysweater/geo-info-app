@@ -40,11 +40,6 @@ export class CitiesStorageService {
 
   // region MERGE
 
-  public mergeWithApiData(apiCity: PopulatedPlaceSummary): PopulatedPlaceSummary {
-    const editedCity = this.getEditedCity(apiCity.id);
-    return editedCity ? { ...apiCity, ...editedCity } : apiCity;
-  }
-
   public mergeCityList(apiCities: PopulatedPlaceSummary[]): PopulatedPlaceSummary[] {
     const editedCities = this.storage;
     return apiCities.map(city => {

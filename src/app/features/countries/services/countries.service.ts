@@ -15,10 +15,6 @@ export class CountriesService {
   // region GETTERS
 
   public readonly countries: Signal<CountrySummary[]> = this._countries.asReadonly();
-  public readonly total: Signal<number> = this._total.asReadonly();
-  public readonly currentOffset: Signal<number> = this._currentOffset.asReadonly();
-  public readonly pageItemsLimit: Signal<number> = this._pageItemsLimit.asReadonly();
-
   public readonly pageCount: Signal<number> = computed(() =>
     Math.ceil(this._total() / this._pageItemsLimit())
   );

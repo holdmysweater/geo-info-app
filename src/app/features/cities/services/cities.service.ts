@@ -11,16 +11,11 @@ export class CitiesService {
 
   private readonly _cities: WritableSignal<PopulatedPlaceSummary[]> = signal<PopulatedPlaceSummary[]>([]);
   private readonly _total: WritableSignal<number> = signal<number>(0);
-  private readonly _currentOffset: WritableSignal<number> = signal<number>(0);
   private readonly _pageItemsLimit: WritableSignal<number> = signal<number>(6);
 
   public readonly cities: Signal<PopulatedPlaceSummary[]> = this._cities.asReadonly();
-  public readonly total: Signal<number> = this._total.asReadonly();
-  public readonly currentOffset: Signal<number> = this._currentOffset.asReadonly();
-  public readonly pageItemsLimit: Signal<number> = this._pageItemsLimit.asReadonly();
-
   public readonly pageCount: Signal<number> = computed(() =>
-    Math.ceil(this.total() / this.pageItemsLimit())
+    Math.ceil(this._total() / this._pageItemsLimit())
   );
 
   // region FETCH
@@ -47,7 +42,7 @@ export class CitiesService {
         ...response,
         data: this.storage.mergeCityList(response.data)
       })),
-      tap((res: CitiesListResponse) => this.processCityListResponse(res, offset))
+      tap((res: CitiesListResponse) => this.processCityListResponse(res))
     );
   }
 
@@ -104,10 +99,9 @@ export class CitiesService {
 
   // region HELPERS
 
-  private processCityListResponse(res: CitiesListResponse, offset: number): void {
+  private processCityListResponse(res: CitiesListResponse): void {
     this._cities.set(res.data);
     this._total.set(res.metadata.totalCount);
-    this._currentOffset.set(offset);
   }
 
   // endregion
