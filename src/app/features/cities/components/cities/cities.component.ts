@@ -1,5 +1,5 @@
 import { Component, computed, effect, inject, input, InputSignal, Signal, signal, WritableSignal } from '@angular/core';
-import { CitiesTableComponent } from '../../components/cities-table/cities-table.component';
+import { CitiesTableComponent } from '../cities-table/cities-table.component';
 import {
   TuiLoader,
   TuiTextfieldComponent,
