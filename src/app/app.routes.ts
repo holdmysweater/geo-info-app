@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { CountriesComponent } from './features/countries/pages/countries/countries.component';
+import { CountriesComponent } from './features/countries/components/countries/countries.component';
 import { CitiesComponent } from './features/cities/components/cities/cities.component';
 
 export const routes: Routes = [

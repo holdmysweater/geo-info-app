@@ -1,5 +1,5 @@
 import { Component, effect, inject, input, InputSignal } from '@angular/core';
-import { CountriesTableComponent } from '../../components/countries-table/countries-table.component';
+import { CountriesTableComponent } from '../countries-table/countries-table.component';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TuiTextfieldComponent, TuiTextfieldDirective, TuiTextfieldOptionsDirective } from '@taiga-ui/core';
 import { PaginationService } from '../../../../shared/services/pagination.service';
